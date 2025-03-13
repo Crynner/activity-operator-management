@@ -1,23 +1,41 @@
 package nz.ac.auckland.se281;
 
 import nz.ac.auckland.se281.Types.Location;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OperatorManagementSystem {
 
   // Do not change the parameters of the constructor
-  public OperatorManagementSystem() {}
-
-    public class Operator {
-      private String operatorName;
-      private Location location;
-      private String operatorId;
-      private String operatorInitials;
-
-      Operator(String operatorName, Location location) {
-        this.operatorName = operatorName;
-        this.location = location;
-      }
+  public OperatorManagementSystem() {
+    Map<Location, Integer> locationIdTracker = new HashMap<>();
+    for (Location location : Location.values()) {
+      locationIdTracker.put(location, 0);
     }
+  }
+
+  // basic class for storing Operator info
+  final class Operator {
+    private String operatorName;
+    private Location location;
+    private String operatorId;
+
+    Operator(String operatorName, Location location, int id_num) {
+      this.operatorName = operatorName;
+      this.location = location;
+
+      // construct initials by splitting words and taking the first letter
+      String operatorInitials = "";
+      for (String word : operatorName.split(" ")) {
+        operatorInitials += word.charAt(0);
+      }
+      
+      this.operatorId = operatorInitials + location.getLocationAbbreviation() + String.format("%03d", id_num);
+
+    }
+  }
+
+
 
   public void searchOperators(String keyword) {
     System.out.println("There are no matching operators found.");
