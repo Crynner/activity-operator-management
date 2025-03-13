@@ -991,6 +991,21 @@ public class MainTest {
       
       assertContains("not a valid operator name.");
     }
+
+    @Test
+    public void T4_03_create_duplicate_operator_location_substring() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'testname'",
+        "tau",
+        CREATE_OPERATOR,
+        "testname",
+        "tau",
+        EXIT
+      );
+      
+      assertContains("already exists same location for 'Tauranga'.");
+    }
   }
 
   private static final Object[] CREATE_14_OPERATORS =

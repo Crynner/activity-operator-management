@@ -137,8 +137,8 @@ public class OperatorManagementSystem {
 
     // checks if any operators exist, and if operator is already catalogued (same name and location)
     if (operatorList.size() > 0 && 
-        locationActNames.get(Location.fromString(location)).contains(operatorName)){
-      MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(operatorName, Location.fromString(location).getFullName());
+        locationActNames.get(foundLocation).contains(operatorName)){
+      MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(operatorName, foundLocation.getFullName());
       return;
     }
 
