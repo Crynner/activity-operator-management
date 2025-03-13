@@ -979,6 +979,18 @@ public class MainTest {
 
       assertContains("* the place ('TP-AKL-001' located in 'Auckland | Tāmaki Makaurau')");
     }
+
+    @Test
+    public void T4_02_short_operator_name() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'TP'",
+        "'AKL'",
+        EXIT
+      );
+      
+      assertContains("not a valid operator name.");
+    }
   }
 
   private static final Object[] CREATE_14_OPERATORS =

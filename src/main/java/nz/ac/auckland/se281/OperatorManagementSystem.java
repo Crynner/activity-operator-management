@@ -38,7 +38,7 @@ public class OperatorManagementSystem {
       // construct initials by splitting words and taking the first letter
       String operatorInitials = "";
       for (String word : operatorName.split(" ")) {
-        operatorInitials += word.charAt(0);
+        operatorInitials += Character.toUpperCase(word.charAt(0));
       }
       this.operatorId = operatorInitials + "-"
         + location.getLocationAbbreviation() + "-"
@@ -115,6 +115,10 @@ public class OperatorManagementSystem {
     // remove whitespace
     operatorName = operatorName.trim();
     location = location.trim();
+
+    if (operatorName.length() < 3){
+      MessageCli.OPERATOR_NOT_CREATED_INVALID_OPERATOR_NAME.printMessage(operatorName);
+    }
 
     // checks if any operators exist, and if operator is already catalogued (same name and location)
     if (operatorList.size() > 0 && 
