@@ -1,7 +1,6 @@
 package nz.ac.auckland.se281;
 
 import nz.ac.auckland.se281.Types.Location;
-import nz.ac.auckland.se281.MessageCli;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,10 +56,16 @@ public class OperatorManagementSystem {
 
   public void searchOperators(String keyword) {
     ArrayList<Operator> filteredOperators = new ArrayList<>();
-    if (keyword == "*"){
+    if (keyword.equals("*")){
       filteredOperators = operatorList;
     }
     if (filteredOperators.size() > 0){
+      if (filteredOperators.size() == 1){
+        MessageCli.OPERATORS_FOUND.printMessage("is", String.valueOf(1), "", ":");
+      } else{
+        MessageCli.OPERATORS_FOUND.printMessage("are", String.valueOf(filteredOperators.size()), "s", ":");
+      }
+
       for (Operator operator: filteredOperators){
         MessageCli.OPERATOR_ENTRY.printMessage(operator.getName(), operator.getId(), operator.getLocation().getFullName());
       }
