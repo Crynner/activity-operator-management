@@ -1,17 +1,24 @@
 package nz.ac.auckland.se281;
 
 import nz.ac.auckland.se281.Types.Location;
+import nz.ac.auckland.se281.MessageCli;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class OperatorManagementSystem {
 
+  Map<Location, Integer> locationIdTracker;
+  ArrayList<Operator> operatorList;
+
   // Do not change the parameters of the constructor
   public OperatorManagementSystem() {
-    Map<Location, Integer> locationIdTracker = new HashMap<>();
+    locationIdTracker = new HashMap<>();
     for (Location location : Location.values()) {
       locationIdTracker.put(location, 0);
     }
+    operatorList = new ArrayList<>();
   }
 
   // basic class for storing Operator info
@@ -42,7 +49,12 @@ public class OperatorManagementSystem {
   }
 
   public void createOperator(String operatorName, String location) {
-    // TODO implement
+    // increment location id and initialise operator
+    locationIdTracker.put(Location.fromString(location), locationIdTracker.get(Location.fromString(location)) + 1);
+    int idNumber = locationIdTracker.get(Location.fromString(location));
+
+    operatorList.add(new Operator(operatorName, Location.fromString(location), idNumber));
+    MessageCli.OPERATOR_CREATED.printMessage(operatorName, operatorList.getLast().operatorId, Location.fromString(location).getFullName());
   }
 
   public void viewActivities(String operatorId) {
