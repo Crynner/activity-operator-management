@@ -967,7 +967,18 @@ public class MainTest {
     public void reset() {}
 
     @Test
-    public void T4_01_add_your_own_tests_as_needed() throws Exception {}
+    public void T4_01_lowercase_operator_name() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'the place'",
+        "'AKL'",
+        SEARCH_OPERATORS,
+        "*",
+        EXIT
+      );
+
+      assertContains("* the place ('TP-AKL-001' located in 'Auckland | Tāmaki Makaurau')");
+    }
   }
 
   private static final Object[] CREATE_14_OPERATORS =

@@ -16,12 +16,13 @@ public class OperatorManagementSystem {
   public OperatorManagementSystem() {
     locationIdTracker = new HashMap<>();
     locationActNames = new HashMap<>();
+    operatorList = new ArrayList<>();
+
+    // initialise location maps
     for (Location location : Location.values()) {
       locationIdTracker.put(location, 0);
       locationActNames.put(location, new ArrayList<>());
     }
-
-    operatorList = new ArrayList<>();
   }
 
   // basic class for storing Operator info
@@ -39,8 +40,9 @@ public class OperatorManagementSystem {
       for (String word : operatorName.split(" ")) {
         operatorInitials += word.charAt(0);
       }
-      
-      this.operatorId = operatorInitials + "-" +location.getLocationAbbreviation() + "-" + String.format("%03d", id_num);
+      this.operatorId = operatorInitials + "-"
+        + location.getLocationAbbreviation() + "-"
+        + String.format("%03d", id_num);
 
     }
 
@@ -104,8 +106,13 @@ public class OperatorManagementSystem {
   }
 
   public void createOperator(String operatorName, String location) {
+    // remove whitespace
+    operatorName = operatorName.trim();
+    location = location.trim();
+
     // checks if any operators exist, and if operator is already catalogued (same name and location)
-    if (operatorList.size() > 0 && locationActNames.get(operatorList.getLast().getLocation()).contains(operatorName)){
+    if (operatorList.size() > 0 && 
+        locationActNames.get(Location.fromString(location)).contains(operatorName)){
       MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(operatorName, Location.fromString(location).getFullName());
       return;
     }
