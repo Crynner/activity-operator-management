@@ -9,14 +9,18 @@ import java.util.Map;
 public class OperatorManagementSystem {
 
   Map<Location, Integer> locationIdTracker;
+  Map<Location, ArrayList<String>> locationActNames;
   ArrayList<Operator> operatorList;
 
   // Do not change the parameters of the constructor
   public OperatorManagementSystem() {
     locationIdTracker = new HashMap<>();
+    locationActNames = new HashMap<>();
     for (Location location : Location.values()) {
       locationIdTracker.put(location, 0);
+      locationActNames.put(location, new ArrayList<>());
     }
+
     operatorList = new ArrayList<>();
   }
 
@@ -76,11 +80,19 @@ public class OperatorManagementSystem {
   }
 
   public void createOperator(String operatorName, String location) {
+    // checks if any operators exist, and if operator is already catalogued (same name and location)
+    if (operatorList.size() > 0 && locationActNames.get(operatorList.getLast().getLocation()).contains(operatorName)){
+      MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(operatorName, Location.fromString(location).getFullName());
+      return;
+    }
     // increment location id and initialise operator
     locationIdTracker.put(Location.fromString(location), locationIdTracker.get(Location.fromString(location)) + 1);
     int idNumber = locationIdTracker.get(Location.fromString(location));
 
+    // add operator to list, activity name to location list, outputs to terminal
     operatorList.add(new Operator(operatorName, Location.fromString(location), idNumber));
+    locationActNames.get(operatorList.getLast().getLocation()).add(operatorName);
+
     MessageCli.OPERATOR_CREATED.printMessage(operatorName, operatorList.getLast().getId(), Location.fromString(location).getFullName());
   }
 
