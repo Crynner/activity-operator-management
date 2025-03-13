@@ -37,11 +37,10 @@ public class OperatorManagementSystem {
         operatorInitials += word.charAt(0);
       }
       
-      this.operatorId = operatorInitials + location.getLocationAbbreviation() + String.format("%03d", id_num);
+      this.operatorId = operatorInitials + "-" +location.getLocationAbbreviation() + "-" + String.format("%03d", id_num);
 
     }
   }
-
 
 
   public void searchOperators(String keyword) {
