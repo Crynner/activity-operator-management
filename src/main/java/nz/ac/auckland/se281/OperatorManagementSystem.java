@@ -40,6 +40,18 @@ public class OperatorManagementSystem {
       this.operatorId = operatorInitials + "-" +location.getLocationAbbreviation() + "-" + String.format("%03d", id_num);
 
     }
+
+    public String getName(){
+      return this.operatorName;
+    }
+
+    public Location getLocation(){
+      return this.location;
+    }
+
+    public String getId(){
+      return this.operatorId;
+    }
   }
 
 
@@ -53,7 +65,7 @@ public class OperatorManagementSystem {
     int idNumber = locationIdTracker.get(Location.fromString(location));
 
     operatorList.add(new Operator(operatorName, Location.fromString(location), idNumber));
-    MessageCli.OPERATOR_CREATED.printMessage(operatorName, operatorList.getLast().operatorId, Location.fromString(location).getFullName());
+    MessageCli.OPERATOR_CREATED.printMessage(operatorName, operatorList.getLast().getId(), Location.fromString(location).getFullName());
   }
 
   public void viewActivities(String operatorId) {
