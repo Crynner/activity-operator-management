@@ -56,7 +56,18 @@ public class OperatorManagementSystem {
 
 
   public void searchOperators(String keyword) {
-    System.out.println("There are no matching operators found.");
+    ArrayList<Operator> filteredOperators = new ArrayList<>();
+    if (keyword == "*"){
+      filteredOperators = operatorList;
+    }
+    if (filteredOperators.size() > 0){
+      for (Operator operator: filteredOperators){
+        MessageCli.OPERATOR_ENTRY.printMessage(operator.getName(), operator.getId(), operator.getLocation().getFullName());
+      }
+    } else{
+      System.out.println("There are no matching operators found.");
+    }
+    
   }
 
   public void createOperator(String operatorName, String location) {
