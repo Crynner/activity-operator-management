@@ -90,17 +90,23 @@ public class OperatorManagementSystem {
       }
     }
     if (filteredOperators.size() > 0){
+      // if exactly one operators match
       if (filteredOperators.size() == 1){
         MessageCli.OPERATORS_FOUND.printMessage("is", String.valueOf(1), "", ":");
-      } else{
+      }
+      // if more than one operators match
+      else{
         MessageCli.OPERATORS_FOUND.printMessage("are", String.valueOf(filteredOperators.size()), "s", ":");
       }
-
+      
+      // "finally", print each Operator entry
       for (Operator operator: filteredOperators){
         MessageCli.OPERATOR_ENTRY.printMessage(operator.getName(), operator.getId(), operator.getLocation().getFullName());
       }
-    } else{
-      System.out.println("There are no matching operators found.");
+    }
+    // if no operators match
+    else{
+      MessageCli.OPERATORS_FOUND.printMessage("are", "no", "s", ".");
     }
     
   }
