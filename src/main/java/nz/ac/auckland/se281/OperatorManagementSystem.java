@@ -1,10 +1,10 @@
 package nz.ac.auckland.se281;
 
-import nz.ac.auckland.se281.Types.Location;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
 
@@ -98,7 +98,8 @@ public class OperatorManagementSystem {
 
       for (Operator op: operatorList){
         // conditional encapsulates .equalsIgnoreCase() and .contains() i think?
-        if (op.getName().toLowerCase().contains(keyword.toLowerCase())){
+        if (op.getName().toLowerCase().contains(keyword.toLowerCase()) &&
+            !filteredOperators.contains(op)){
           filteredOperators.add(op);
         }
       }
