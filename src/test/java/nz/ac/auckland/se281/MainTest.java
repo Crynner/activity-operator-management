@@ -1006,6 +1006,23 @@ public class MainTest {
       
       assertContains("already exists same location for 'Tauranga'.");
     }
+
+    @Test
+    public void T4_04_matching_name_location_search() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'akl test scene'",
+        "trg",
+        CREATE_OPERATOR,
+        "'unrelated test scene'",
+        "akl",
+        SEARCH_OPERATORS,
+        "akl",
+        EXIT
+      );
+      
+      assertContains("There are 2 matching operators found:");
+    }
   }
 
   private static final Object[] CREATE_14_OPERATORS =
