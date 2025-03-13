@@ -65,12 +65,12 @@ public class OperatorManagementSystem {
     }
     // otherwise match substrings
     else{
-      for (Location l: Location.values()){
-        if (l.getNameEnglish().contains(input)
-            || l.getNameTeReo().contains(input)
-            || l.getLocationAbbreviation().contains(input)){
+      for (Location location: Location.values()){
+        if (location.getNameEnglish().toLowerCase().contains(input)
+            || location.getNameTeReo().toLowerCase().contains(input)
+            || location.getLocationAbbreviation().toLowerCase().contains(input)){
           
-          return l;
+          return location;
         }
       }
       // if input does not match at all
@@ -83,30 +83,20 @@ public class OperatorManagementSystem {
     if (keyword.equals("*")){
       filteredOperators = operatorList;
     }
-    else if(Location.fromString(keyword) != null){
-      // add all operators with matching location
-      for (Operator operator: operatorList){
-        if (operator.getLocation().equals(Location.fromString(keyword))){
-          filteredOperators.add(operator);
-        }
-      }
-    }
-    else {
-      // supposing keyword is a substring of a location
-      for (Location location: Location.values()){
-        if (location.getNameEnglish().contains(keyword)
-            || location.getNameTeReo().contains(keyword)
-            || location.getLocationAbbreviation().contains(keyword)){
-          
-          // add all operators with matching location
-          for (Operator operator: operatorList){
-            if (operator.getLocation().equals(location)){
-              filteredOperators.add(operator);
-            }
+    else{
+      if (findLocation(keyword) != null){
+        Location location = findLocation(keyword);
+  
+        // add all operators with matching location
+        for (Operator operator: operatorList){
+          if (operator.getLocation() == location){
+            filteredOperators.add(operator);
           }
         }
       }
+      // if null, filteredOperators will resolve to size 0, correct message displayed
     }
+    
     if (filteredOperators.size() > 0){
       // if exactly one operators match
       if (filteredOperators.size() == 1){
@@ -139,16 +129,17 @@ public class OperatorManagementSystem {
       return;
     }
 
+    Location foundLocation = findLocation(location);
+    if (foundLocation == null){
+      MessageCli.OPERATOR_NOT_CREATED_INVALID_LOCATION.printMessage(location);
+      return;
+    }
+
     // checks if any operators exist, and if operator is already catalogued (same name and location)
     if (operatorList.size() > 0 && 
         locationActNames.get(Location.fromString(location)).contains(operatorName)){
       MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(operatorName, Location.fromString(location).getFullName());
       return;
-    }
-
-    Location foundLocation = findLocation(location);
-    if (foundLocation == null){
-      MessageCli.OPERATOR_NOT_CREATED_INVALID_LOCATION.printMessage(location);
     }
 
     // increment location id and initialise operator
