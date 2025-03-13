@@ -26,7 +26,7 @@ public class OperatorManagementSystem {
   }
 
   // basic class for storing Operator info
-  final class Operator {
+  public class Operator {
     private String operatorName;
     private Location location;
     private String operatorId;
@@ -59,6 +59,24 @@ public class OperatorManagementSystem {
     }
   }
 
+  public Location findLocation(String input){
+    if (Location.fromString(input) != null){
+      return Location.fromString(input);
+    }
+    // otherwise match substrings
+    else{
+      for (Location l: Location.values()){
+        if (l.getNameEnglish().contains(input)
+            || l.getNameTeReo().contains(input)
+            || l.getLocationAbbreviation().contains(input)){
+          
+          return l;
+        }
+      }
+      // if input does not match at all
+      return null;
+    }
+  }
 
   public void searchOperators(String keyword) {
     ArrayList<Operator> filteredOperators = new ArrayList<>();
@@ -74,7 +92,7 @@ public class OperatorManagementSystem {
       }
     }
     else {
-      // supposing keyword is a valid location name
+      // supposing keyword is a substring of a location
       for (Location location: Location.values()){
         if (location.getNameEnglish().contains(keyword)
             || location.getNameTeReo().contains(keyword)
@@ -118,6 +136,7 @@ public class OperatorManagementSystem {
 
     if (operatorName.length() < 3){
       MessageCli.OPERATOR_NOT_CREATED_INVALID_OPERATOR_NAME.printMessage(operatorName);
+      return;
     }
 
     // checks if any operators exist, and if operator is already catalogued (same name and location)
@@ -126,15 +145,21 @@ public class OperatorManagementSystem {
       MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(operatorName, Location.fromString(location).getFullName());
       return;
     }
+
+    Location foundLocation = findLocation(location);
+    if (foundLocation == null){
+      MessageCli.OPERATOR_NOT_CREATED_INVALID_LOCATION.printMessage(location);
+    }
+
     // increment location id and initialise operator
-    locationIdTracker.put(Location.fromString(location), locationIdTracker.get(Location.fromString(location)) + 1);
-    int idNumber = locationIdTracker.get(Location.fromString(location));
+    locationIdTracker.put(foundLocation, locationIdTracker.get(foundLocation) + 1);
+    int idNumber = locationIdTracker.get(foundLocation);
 
     // add operator to list, activity name to location list, outputs to terminal
-    operatorList.add(new Operator(operatorName, Location.fromString(location), idNumber));
+    operatorList.add(new Operator(operatorName, foundLocation, idNumber));
     locationActNames.get(operatorList.getLast().getLocation()).add(operatorName);
 
-    MessageCli.OPERATOR_CREATED.printMessage(operatorName, operatorList.getLast().getId(), Location.fromString(location).getFullName());
+    MessageCli.OPERATOR_CREATED.printMessage(operatorName, operatorList.getLast().getId(), foundLocation.getFullName());
   }
 
   public void viewActivities(String operatorId) {
