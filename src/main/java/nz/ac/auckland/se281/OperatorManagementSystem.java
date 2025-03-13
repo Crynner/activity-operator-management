@@ -1,12 +1,26 @@
 package nz.ac.auckland.se281;
 
+import nz.ac.auckland.se281.Types.Location;
+
 public class OperatorManagementSystem {
 
   // Do not change the parameters of the constructor
   public OperatorManagementSystem() {}
 
+    public class Operator {
+      private String operatorName;
+      private Location location;
+      private String operatorId;
+      private String operatorInitials;
+
+      Operator(String operatorName, Location location) {
+        this.operatorName = operatorName;
+        this.location = location;
+      }
+    }
+
   public void searchOperators(String keyword) {
-    // TODO implement
+    System.out.println("There are no matching operators found.");
   }
 
   public void createOperator(String operatorName, String location) {
