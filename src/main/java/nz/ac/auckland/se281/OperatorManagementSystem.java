@@ -84,6 +84,7 @@ public class OperatorManagementSystem {
       filteredOperators = operatorList;
     }
     else{
+      // if keyword corresponds to valid location
       if (findLocation(keyword) != null){
         Location location = findLocation(keyword);
   
@@ -94,7 +95,13 @@ public class OperatorManagementSystem {
           }
         }
       }
-      // if null, filteredOperators will resolve to size 0, correct message displayed
+
+      for (Operator op: operatorList){
+        // conditional encapsulates .equalsIgnoreCase() and .contains() i think?
+        if (op.getName().toLowerCase().contains(keyword.toLowerCase())){
+          filteredOperators.add(op);
+        }
+      }
     }
     
     if (filteredOperators.size() > 0){
