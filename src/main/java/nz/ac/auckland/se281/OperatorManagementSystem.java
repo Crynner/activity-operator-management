@@ -63,6 +63,30 @@ public class OperatorManagementSystem {
     if (keyword.equals("*")){
       filteredOperators = operatorList;
     }
+    else if(Location.fromString(keyword) != null){
+      // add all operators with matching location
+      for (Operator operator: operatorList){
+        if (operator.getLocation().equals(Location.fromString(keyword))){
+          filteredOperators.add(operator);
+        }
+      }
+    }
+    else {
+      // supposing keyword is a valid location name
+      for (Location location: Location.values()){
+        if (location.getNameEnglish().contains(keyword)
+            || location.getNameTeReo().contains(keyword)
+            || location.getLocationAbbreviation().contains(keyword)){
+          
+          // add all operators with matching location
+          for (Operator operator: operatorList){
+            if (operator.getLocation().equals(location)){
+              filteredOperators.add(operator);
+            }
+          }
+        }
+      }
+    }
     if (filteredOperators.size() > 0){
       if (filteredOperators.size() == 1){
         MessageCli.OPERATORS_FOUND.printMessage("is", String.valueOf(1), "", ":");
