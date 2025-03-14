@@ -25,6 +25,7 @@ public class OperatorManagementSystem {
   }
 
   public Location findLocation(String input) {
+    input = input.toLowerCase();
     // if input corresponds to Location
     if (Location.fromString(input) != null) {
       return Location.fromString(input);

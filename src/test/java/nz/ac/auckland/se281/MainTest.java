@@ -1052,6 +1052,18 @@ public class MainTest {
       
       assertContains("Successfully created operator");
     }
+
+    @Test
+    public void T4_07_operator_name_thai() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'การทดลอง'",
+        "akl",
+        EXIT
+      );
+      
+      assertContains("Successfully created operator");
+    }
   }
 
   private static final Object[] CREATE_14_OPERATORS =
