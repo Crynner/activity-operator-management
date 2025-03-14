@@ -25,40 +25,6 @@ public class OperatorManagementSystem {
     }
   }
 
-  // basic class for storing Operator info
-  public class Operator {
-    private String operatorName;
-    private Location location;
-    private String operatorId;
-
-    Operator(String operatorName, Location location, int id_num) {
-      this.operatorName = operatorName;
-      this.location = location;
-
-      // construct initials by splitting words and taking the first letter
-      String operatorInitials = "";
-      for (String word : operatorName.split(" ")) {
-        operatorInitials += Character.toUpperCase(word.charAt(0));
-      }
-      this.operatorId = operatorInitials + "-"
-        + location.getLocationAbbreviation() + "-"
-        + String.format("%03d", id_num);
-
-    }
-
-    public String getName(){
-      return this.operatorName;
-    }
-
-    public Location getLocation(){
-      return this.location;
-    }
-
-    public String getId(){
-      return this.operatorId;
-    }
-  }
-
   public Location findLocation(String input){
     if (Location.fromString(input) != null){
       return Location.fromString(input);
@@ -79,6 +45,8 @@ public class OperatorManagementSystem {
   }
 
   public void searchOperators(String keyword) {
+    keyword = keyword.trim();
+
     ArrayList<Operator> filteredOperators = new ArrayList<>();
     if (keyword.equals("*")){
       filteredOperators = operatorList;
@@ -105,7 +73,7 @@ public class OperatorManagementSystem {
       }
     }
     
-    if (filteredOperators.size() > 0){
+    if (!filteredOperators.isEmpty()){
       // if exactly one operators match
       if (filteredOperators.size() == 1){
         MessageCli.OPERATORS_FOUND.printMessage("is", String.valueOf(1), "", ":");
@@ -132,19 +100,20 @@ public class OperatorManagementSystem {
     operatorName = operatorName.trim();
     location = location.trim();
 
+    // names less than 3 characters are invalid.
     if (operatorName.length() < 3){
       MessageCli.OPERATOR_NOT_CREATED_INVALID_OPERATOR_NAME.printMessage(operatorName);
       return;
     }
 
-    Location foundLocation = findLocation(location);
+    Location foundLocation = Location.fromString(location);
     if (foundLocation == null){
       MessageCli.OPERATOR_NOT_CREATED_INVALID_LOCATION.printMessage(location);
       return;
     }
 
     // checks if any operators exist, and if operator is already catalogued (same name and location)
-    if (operatorList.size() > 0 && 
+    if (!operatorList.isEmpty() && 
         locationActNames.get(foundLocation).contains(operatorName)){
       MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(operatorName, foundLocation.getFullName());
       return;

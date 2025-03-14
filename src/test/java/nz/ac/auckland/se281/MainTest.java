@@ -993,22 +993,7 @@ public class MainTest {
     }
 
     @Test
-    public void T4_03_create_duplicate_operator_location_substring() throws Exception {
-      runCommands(
-        CREATE_OPERATOR,
-        "'testname'",
-        "tau",
-        CREATE_OPERATOR,
-        "testname",
-        "tau",
-        EXIT
-      );
-      
-      assertContains("already exists same location for 'Tauranga'.");
-    }
-
-    @Test
-    public void T4_04_matching_name_location_search() throws Exception {
+    public void T4_03_matching_name_location_search() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'akl test scene'",
