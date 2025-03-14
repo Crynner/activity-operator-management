@@ -3,14 +3,13 @@ package nz.ac.auckland.se281;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
 
-  Map<Location, Integer> locationIdTracker;
-  Map<Location, ArrayList<String>> locationActNames;
-  ArrayList<Operator> operatorList;
+  private Map<Location, Integer> locationIdTracker;
+  private Map<Location, ArrayList<String>> locationActNames;
+  private ArrayList<Operator> operatorList;
 
   // Do not change the parameters of the constructor
   public OperatorManagementSystem() {
@@ -29,9 +28,7 @@ public class OperatorManagementSystem {
     // if input corresponds to Location
     if (Location.fromString(input) != null){
       return Location.fromString(input);
-    }
-    // otherwise match substrings
-    else{
+    } else{ // otherwise match substrings
       for (Location location: Location.values()){
         if (location.getNameEnglish().toLowerCase().contains(input)
             || location.getNameTeReo().toLowerCase().contains(input)
@@ -52,8 +49,7 @@ public class OperatorManagementSystem {
 
     if (keyword.equals("*")){
       filteredOperators = operatorList;
-    }
-    else{
+    } else{
       // if keyword corresponds to valid location
       if (findLocation(keyword) != null){
         Location location = findLocation(keyword);
@@ -68,8 +64,8 @@ public class OperatorManagementSystem {
 
       for (Operator op: operatorList){
         // if keyword is found as substring and not already in filteredOperators, add it
-        if (op.getName().toLowerCase().contains(keyword.toLowerCase()) &&
-            !filteredOperators.contains(op)){
+        if (op.getName().toLowerCase().contains(keyword.toLowerCase())
+            && !filteredOperators.contains(op)){
           filteredOperators.add(op);
         }
       }
@@ -79,9 +75,7 @@ public class OperatorManagementSystem {
       // if exactly one operators match
       if (filteredOperators.size() == 1){
         MessageCli.OPERATORS_FOUND.printMessage("is", "1", "", ":");
-      }
-      // if more than one operators match
-      else{
+      } else{ // if more than one operators match
         MessageCli.OPERATORS_FOUND.printMessage("are", String.valueOf(filteredOperators.size()), "s", ":");
       }
       
@@ -89,9 +83,7 @@ public class OperatorManagementSystem {
       for (Operator operator: filteredOperators){
         MessageCli.OPERATOR_ENTRY.printMessage(operator.getName(), operator.getId(), operator.getLocation().getFullName());
       }
-    }
-    // if no operators match
-    else{
+    } else{ // if no operators match
       MessageCli.OPERATORS_FOUND.printMessage("are", "no", "s", ".");
     }
   }
@@ -117,8 +109,8 @@ public class OperatorManagementSystem {
     }
 
     // checks if any operators exist, and if operator is already catalogued (same name and location)
-    if (!operatorList.isEmpty() && 
-        locationActNames.get(foundLocation).contains(operatorName)){
+    if (!operatorList.isEmpty()
+        && locationActNames.get(foundLocation).contains(operatorName)){
       MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(operatorName, foundLocation.getFullName());
       return;
     }
@@ -131,7 +123,9 @@ public class OperatorManagementSystem {
     operatorList.add(new Operator(operatorName, foundLocation, idNumber));
     locationActNames.get(operatorList.getLast().getLocation()).add(operatorName);
 
-    MessageCli.OPERATOR_CREATED.printMessage(operatorName, operatorList.getLast().getId(), foundLocation.getFullName());
+    MessageCli.OPERATOR_CREATED.printMessage(operatorName,
+        operatorList.getLast().getId(),
+        foundLocation.getFullName());
   }
 
   public void viewActivities(String operatorId) {
