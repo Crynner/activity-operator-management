@@ -1008,6 +1008,21 @@ public class MainTest {
       
       assertContains("There are 2 matching operators found:");
     }
+
+    @Test
+    public void T4_04_macron_location_search_create() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'Generic Operator Name'",
+        "'Tāmaki Makaurau'",
+        SEARCH_OPERATORS,
+        "'Tāmaki Makaurau'",
+        EXIT
+      );
+      
+      assertContains("Successfully created operator");
+      assertContains("located in 'Auckland | Tāmaki Makaurau')");
+    }
   }
 
   private static final Object[] CREATE_14_OPERATORS =

@@ -26,6 +26,7 @@ public class OperatorManagementSystem {
   }
 
   public Location findLocation(String input){
+    // if input corresponds to Location
     if (Location.fromString(input) != null){
       return Location.fromString(input);
     }
@@ -48,6 +49,7 @@ public class OperatorManagementSystem {
     keyword = keyword.trim();
 
     ArrayList<Operator> filteredOperators = new ArrayList<>();
+
     if (keyword.equals("*")){
       filteredOperators = operatorList;
     }
@@ -65,7 +67,7 @@ public class OperatorManagementSystem {
       }
 
       for (Operator op: operatorList){
-        // conditional encapsulates .equalsIgnoreCase() and .contains() i think?
+        // if keyword is found as substring and not already in filteredOperators, add it
         if (op.getName().toLowerCase().contains(keyword.toLowerCase()) &&
             !filteredOperators.contains(op)){
           filteredOperators.add(op);
@@ -76,7 +78,7 @@ public class OperatorManagementSystem {
     if (!filteredOperators.isEmpty()){
       // if exactly one operators match
       if (filteredOperators.size() == 1){
-        MessageCli.OPERATORS_FOUND.printMessage("is", String.valueOf(1), "", ":");
+        MessageCli.OPERATORS_FOUND.printMessage("is", "1", "", ":");
       }
       // if more than one operators match
       else{
@@ -92,13 +94,15 @@ public class OperatorManagementSystem {
     else{
       MessageCli.OPERATORS_FOUND.printMessage("are", "no", "s", ".");
     }
-    
   }
 
   public void createOperator(String operatorName, String location) {
+
     // remove whitespace
     operatorName = operatorName.trim();
     location = location.trim();
+
+    
 
     // names less than 3 characters are invalid.
     if (operatorName.length() < 3){
