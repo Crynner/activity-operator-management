@@ -16,9 +16,11 @@ public class Operator {
     for (String word : operatorName.split(" ")) {
       operatorInitials += Character.toUpperCase(word.charAt(0));
     }
-    this.operatorId = operatorInitials + "-"
-      + location.getLocationAbbreviation() + "-"
-      + String.format("%03d", idNum);
+    this.operatorId = operatorInitials
+        + "-"
+        + location.getLocationAbbreviation()
+        + "-"
+        + String.format("%03d", idNum);
 
   }
 

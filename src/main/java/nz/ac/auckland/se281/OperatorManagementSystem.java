@@ -98,11 +98,11 @@ public class OperatorManagementSystem {
 
   public void createOperator(String operatorName, String location) {
 
-    // remove whitespace
+    // remove whitespace and internal double spaces for operatorName
     operatorName = operatorName.trim();
+    operatorName = operatorName.replaceAll("\\s{2,}", " ");
     location = location.trim();
 
-    
 
     // names less than 3 characters are invalid.
     if (operatorName.length() < 3) {

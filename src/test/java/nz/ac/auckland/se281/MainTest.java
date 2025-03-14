@@ -17,7 +17,7 @@ import org.junit.runners.Suite.SuiteClasses;
   MainTest.Task1.class,
   // MainTest.Task2.class,
   // MainTest.Task3.class,
-  // MainTest.YourTests.class, // Uncomment this line to run your own tests
+  MainTest.YourTests.class, // Uncomment this line to run your own tests
 })
 public class MainTest {
 
@@ -1022,6 +1022,35 @@ public class MainTest {
       
       assertContains("Successfully created operator");
       assertContains("located in 'Auckland | Tāmaki Makaurau')");
+    }
+
+    @Test // not sure the correct protocol to handle this...
+    public void T4_05_operator_startswith_special_character() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'!Generic -Name'",
+        "AKL",
+        SEARCH_OPERATORS,
+        "AKL",
+        EXIT
+      );
+      
+      assertContains("Successfully created operator");
+      // assertContains("located in 'Auckland | Tāmaki Makaurau')");
+    }
+
+    @Test
+    public void T4_06_operator_name_double_space() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'Doubled  space  Operator'",
+        "akl",
+        SEARCH_OPERATORS,
+        "AKL",
+        EXIT
+      );
+      
+      assertContains("Successfully created operator");
     }
   }
 
