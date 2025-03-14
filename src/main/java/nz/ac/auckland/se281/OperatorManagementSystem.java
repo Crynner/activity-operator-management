@@ -29,7 +29,7 @@ public class OperatorManagementSystem {
     if (Location.fromString(input) != null) {
       return Location.fromString(input);
     } else { // otherwise match substrings
-      for (Location location: Location.values()) {
+      for (Location location : Location.values()) {
         if (location.getNameEnglish().toLowerCase().contains(input)
             || location.getNameTeReo().toLowerCase().contains(input)
             || location.getLocationAbbreviation().toLowerCase().contains(input)) {
@@ -55,14 +55,14 @@ public class OperatorManagementSystem {
         Location location = findLocation(keyword);
   
         // add all operators with matching location
-        for (Operator operator: operatorList) {
+        for (Operator operator : operatorList) {
           if (operator.getLocation() == location) {
             filteredOperators.add(operator);
           }
         }
       }
 
-      for (Operator op: operatorList) {
+      for (Operator op : operatorList) {
         // if keyword is found as substring and not already in filteredOperators, add it
         if (op.getName().toLowerCase().contains(keyword.toLowerCase())
             && !filteredOperators.contains(op)) {
@@ -83,7 +83,7 @@ public class OperatorManagementSystem {
       }
       
       // "finally", print each Operator entry
-      for (Operator operator: filteredOperators) {
+      for (Operator operator : filteredOperators) {
         MessageCli.OPERATOR_ENTRY.printMessage(operator.getName(),
             operator.getId(),
             operator.getLocation().getFullName());
