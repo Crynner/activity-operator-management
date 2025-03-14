@@ -7,7 +7,7 @@ public class Operator {
   private Location location;
   private String operatorId;
 
-  Operator(String operatorName, Location location, int IdNum) {
+  Operator(String operatorName, Location location, int idNum) {
     this.operatorName = operatorName;
     this.location = location;
 
@@ -18,7 +18,7 @@ public class Operator {
     }
     this.operatorId = operatorInitials + "-"
       + location.getLocationAbbreviation() + "-"
-      + String.format("%03d", IdNum);
+      + String.format("%03d", idNum);
 
   }
 
