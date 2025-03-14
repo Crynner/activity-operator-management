@@ -22,15 +22,15 @@ public class Operator {
 
   }
 
-  public String getName(){
+  public String getName() {
     return this.operatorName;
   }
 
-  public Location getLocation(){
+  public Location getLocation() {
     return this.location;
   }
 
-  public String getId(){
+  public String getId() {
     return this.operatorId;
   }
 }
