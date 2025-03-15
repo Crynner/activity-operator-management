@@ -1,11 +1,15 @@
 package nz.ac.auckland.se281;
 
+import java.util.ArrayList;
+import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
 public class Operator {
   private String operatorName;
   private Location location;
   private String operatorId;
+
+  private ArrayList<Activity> activityList = new ArrayList<>();
 
   Operator(String operatorName, Location location, int idNum) {
     this.operatorName = operatorName;
@@ -34,5 +38,11 @@ public class Operator {
 
   public String getId() {
     return this.operatorId;
+  }
+
+  public void createActivity(String activityName, ActivityType activityType) {
+    activityList.add(new Activity(activityName,
+        activityType,
+        getId()));
   }
 }
