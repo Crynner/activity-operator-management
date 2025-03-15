@@ -65,4 +65,18 @@ public class Operator {
           operatorName);
     }
   }
+
+  public ArrayList<String> addFilteredActivities(String matchPhrase){
+    ArrayList<String> activityMsgs = new ArrayList<>();
+    for (Activity activity : activityList) {
+      // uses abstracted conditional for readability, adding formatted string to returned ArrayList
+      if (activity.contains(matchPhrase)) {
+        activityMsgs.add(MessageCli.ACTIVITY_ENTRY.getMessage(activity.getName(),
+            activity.getId(),
+            activity.getType().getName(),
+            operatorName));
+      }
+    }
+    return activityMsgs;
+  }
 }

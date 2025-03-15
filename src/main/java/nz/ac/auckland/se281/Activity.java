@@ -25,4 +25,13 @@ public class Activity {
     return this.activityId;
   }
 
+  public boolean contains(String matchPhrase) {
+    // if name or type contains matchPhrase (case insensitive)
+    if (getName().toLowerCase().contains(matchPhrase)
+        || getType().getName().toLowerCase().contains(matchPhrase)) {
+      return true;
+    }
+    return false;
+  }
+
 }

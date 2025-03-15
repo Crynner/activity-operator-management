@@ -211,6 +211,21 @@ public class OperatorManagementSystem {
       for (Operator operator : operatorList) {
         operator.viewAllActivities();
       }
+
+    } else {
+      ArrayList<String> filteredActivityMsgs = new ArrayList<>();
+      for (Operator operator : operatorList) {
+        // all activities are added (matched location), or some filtered are added.
+        if (operator.getLocation() == findLocation(keyword)) {
+          filteredActivityMsgs.addAll(operator.addFilteredActivities(""));
+        } else {
+          filteredActivityMsgs.addAll(operator.addFilteredActivities(keyword));
+        }
+      }
+      printActivityNumber(filteredActivityMsgs.size());
+      for (String activityMsg : filteredActivityMsgs) {
+        System.out.println(activityMsg);
+      }
     }
   }
 
