@@ -3,7 +3,6 @@ package nz.ac.auckland.se281;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
@@ -47,6 +46,7 @@ public class OperatorManagementSystem {
 
   // could be made static
   public void printActivityNumber(Integer totalNumber) {
+    // prints activity number message based on passed number for 0, 1, and more respectively.
     switch (totalNumber) {
       case 0:
         MessageCli.ACTIVITIES_FOUND.printMessage("are", "no", "ies", ".");
@@ -158,6 +158,7 @@ public class OperatorManagementSystem {
   }
 
   public void viewActivities(String operatorId) {
+    operatorId = operatorId.trim();
     // check operator exists
     for (Operator operator : operatorList) {
       if (operator.getId().equalsIgnoreCase(operatorId)) {
@@ -173,6 +174,10 @@ public class OperatorManagementSystem {
   }
 
   public void createActivity(String activityName, String activityType, String operatorId) {
+    activityName = activityName.trim();
+    activityType = activityType.trim();
+    operatorId = operatorId.trim();
+
     // check operator exists
     for (Operator operator : operatorList) {
       if (operator.getId().equalsIgnoreCase(operatorId)) {
@@ -191,6 +196,9 @@ public class OperatorManagementSystem {
   }
 
   public void searchActivities(String keyword) {
+    // standardise formatting
+    keyword = keyword.trim().toLowerCase();
+
     Integer activityNumber = 0;
     if (keyword.equals("*")) {
       // get number of activities in all operators and print accordingly

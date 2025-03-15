@@ -56,7 +56,7 @@ public class Operator {
         getName());
   }
 
-  public void viewAllActivities(){
+  public void viewAllActivities() {
     // TODO potential change from void to ArrayList<String> for search efficiency, output in manager
     for (Activity activity : activityList) {
       MessageCli.ACTIVITY_ENTRY.printMessage(activity.getName(),
