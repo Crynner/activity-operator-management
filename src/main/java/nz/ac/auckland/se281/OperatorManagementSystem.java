@@ -141,7 +141,15 @@ public class OperatorManagementSystem {
   }
 
   public void viewActivities(String operatorId) {
-    // TODO implement
+    // check operator exists
+    for (Operator operator : operatorList) {
+      if (operator.getId().equalsIgnoreCase(operatorId)) {
+        operator.viewAllActivities();
+        return;
+      }
+    }
+    // otherwise output cli error
+
   }
 
   public void createActivity(String activityName, String activityType, String operatorId) {

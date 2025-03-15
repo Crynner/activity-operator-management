@@ -51,4 +51,13 @@ public class Operator {
         activityType.getName(),
         getName());
   }
+
+  public void viewAllActivities(){
+    for (Activity activity : activityList) {
+      MessageCli.ACTIVITY_ENTRY.printMessage(activity.getName(),
+          activity.getId(),
+          activity.getType().getName(),
+          operatorName);
+    }
+  }
 }
