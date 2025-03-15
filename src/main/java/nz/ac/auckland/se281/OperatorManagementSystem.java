@@ -191,7 +191,19 @@ public class OperatorManagementSystem {
   }
 
   public void searchActivities(String keyword) {
-    // TODO implement
+    Integer activityNumber = 0;
+    if (keyword.equals("*")) {
+      // get number of activities in all operators and print accordingly
+      for (Operator operator : operatorList) {
+        activityNumber += operator.getActivityNumber();
+      }
+      printActivityNumber(activityNumber);
+
+      // iterate over each operator
+      for (Operator operator : operatorList) {
+        operator.viewAllActivities();
+      }
+    }
   }
 
   public void addPublicReview(String activityId, String[] options) {
