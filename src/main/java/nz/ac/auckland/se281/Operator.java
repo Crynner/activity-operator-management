@@ -56,17 +56,12 @@ public class Operator {
         getName());
   }
 
-  public void viewAllActivities() {
-    // TODO potential change from void to ArrayList<String> for search efficiency, output in manager
-    for (Activity activity : activityList) {
-      MessageCli.ACTIVITY_ENTRY.printMessage(activity.getName(),
-          activity.getId(),
-          activity.getType().getName(),
-          operatorName);
-    }
+  public ArrayList<String> addAllActivityMsgs() {
+    // helper method that returns all activities
+    return addFilteredActivityMsgs("");
   }
 
-  public ArrayList<String> addFilteredActivities(String matchPhrase){
+  public ArrayList<String> addFilteredActivityMsgs(String matchPhrase){
     ArrayList<String> activityMsgs = new ArrayList<>();
     for (Activity activity : activityList) {
       // uses abstracted conditional for readability, adding formatted string to returned ArrayList

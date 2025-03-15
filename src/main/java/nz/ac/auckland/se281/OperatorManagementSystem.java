@@ -162,10 +162,13 @@ public class OperatorManagementSystem {
     // check operator exists
     for (Operator operator : operatorList) {
       if (operator.getId().equalsIgnoreCase(operatorId)) {
+
         // print grammatically accurate message
         printActivityNumber(operator.getActivityNumber());
 
-        operator.viewAllActivities();
+        for (String activityMsg : operator.addAllActivityMsgs()) {
+          System.out.println(activityMsg);
+        }
         return;
       }
     }
@@ -199,33 +202,29 @@ public class OperatorManagementSystem {
     // standardise formatting
     keyword = keyword.trim().toLowerCase();
 
-    Integer activityNumber = 0;
-    if (keyword.equals("*")) {
-      // get number of activities in all operators and print accordingly
-      for (Operator operator : operatorList) {
-        activityNumber += operator.getActivityNumber();
-      }
-      printActivityNumber(activityNumber);
+    ArrayList<String> filteredActivityMsgs = new ArrayList<>();
 
-      // iterate over each operator
+    if (keyword.equals("*")) {
+      // get all activities in all operators
       for (Operator operator : operatorList) {
-        operator.viewAllActivities();
+        filteredActivityMsgs.addAll(operator.addAllActivityMsgs());
       }
 
     } else {
-      ArrayList<String> filteredActivityMsgs = new ArrayList<>();
       for (Operator operator : operatorList) {
-        // all activities are added (matched location), or some filtered are added.
+        // all activities are added (matched location), or some filtered activities are added.
         if (operator.getLocation() == findLocation(keyword)) {
-          filteredActivityMsgs.addAll(operator.addFilteredActivities(""));
+          filteredActivityMsgs.addAll(operator.addAllActivityMsgs());
         } else {
-          filteredActivityMsgs.addAll(operator.addFilteredActivities(keyword));
+          filteredActivityMsgs.addAll(operator.addFilteredActivityMsgs(keyword));
         }
       }
-      printActivityNumber(filteredActivityMsgs.size());
-      for (String activityMsg : filteredActivityMsgs) {
-        System.out.println(activityMsg);
-      }
+    }
+
+    // print message for number of activities, and list of activities
+    printActivityNumber(filteredActivityMsgs.size());
+    for (String activityMsg : filteredActivityMsgs) {
+      System.out.println(activityMsg);
     }
   }
 
