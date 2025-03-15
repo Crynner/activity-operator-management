@@ -3,6 +3,8 @@ package nz.ac.auckland.se281;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
@@ -143,7 +145,13 @@ public class OperatorManagementSystem {
   }
 
   public void createActivity(String activityName, String activityType, String operatorId) {
-    // TODO implement
+    // check operator exists
+    for (Operator operator : operatorList) {
+      if (operator.getId().equalsIgnoreCase(operatorId)){
+        operator.createActivity(activityName, ActivityType.fromString(activityType));
+        return;
+      }
+    }
   }
 
   public void searchActivities(String keyword) {

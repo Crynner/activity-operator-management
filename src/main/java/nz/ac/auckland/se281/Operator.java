@@ -41,8 +41,14 @@ public class Operator {
   }
 
   public void createActivity(String activityName, ActivityType activityType) {
+    // passes name, type, and id with size-based incrementer
     activityList.add(new Activity(activityName,
         activityType,
-        getId()));
+        getId() + "-" + String.format("%03d", activityList.size() + 1)));
+    
+    MessageCli.ACTIVITY_CREATED.printMessage(activityName,
+        activityList.getLast().getId(),
+        activityType.getName(),
+        getName());
   }
 }

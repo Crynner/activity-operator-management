@@ -7,10 +7,10 @@ public class Activity {
   private ActivityType activityType;
   private String activityId;
 
-  Activity(String activityName, ActivityType activityType, String operatorId) {
+  Activity(String activityName, ActivityType activityType, String activityId) {
     this.activityName = activityName;
     this.activityType = activityType;
-    this.activityId = operatorId;
+    this.activityId = activityId;
   }
 
   public String getName() {
