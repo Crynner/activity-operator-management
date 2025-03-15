@@ -147,11 +147,19 @@ public class OperatorManagementSystem {
   public void createActivity(String activityName, String activityType, String operatorId) {
     // check operator exists
     for (Operator operator : operatorList) {
-      if (operator.getId().equalsIgnoreCase(operatorId)){
+      if (operator.getId().equalsIgnoreCase(operatorId)) {
+        // error checking for short activity name
+        if (activityName.length() < 3) {
+          MessageCli.ACTIVITY_NOT_CREATED_INVALID_ACTIVITY_NAME.printMessage(activityName);
+          return;
+        }
+
         operator.createActivity(activityName, ActivityType.fromString(activityType));
         return;
       }
     }
+    // otherwise output cli error
+    MessageCli.ACTIVITY_NOT_CREATED_INVALID_OPERATOR_ID.printMessage(operatorId);
   }
 
   public void searchActivities(String keyword) {
