@@ -45,6 +45,23 @@ public class OperatorManagementSystem {
     }
   }
 
+  // could be made static
+  public void printActivityNumber(Integer totalNumber) {
+    switch (totalNumber) {
+      case 0:
+        MessageCli.ACTIVITIES_FOUND.printMessage("are", "no", "ies", ".");
+        return;
+      case 1:
+        MessageCli.ACTIVITIES_FOUND.printMessage("is", "1", "y", ":");
+        break;
+      default:
+        MessageCli.ACTIVITIES_FOUND.printMessage("are",
+            totalNumber.toString(),
+            "ies",
+            ":");
+    }
+  }
+
   public void searchOperators(String keyword) {
     keyword = keyword.trim();
 
@@ -144,6 +161,9 @@ public class OperatorManagementSystem {
     // check operator exists
     for (Operator operator : operatorList) {
       if (operator.getId().equalsIgnoreCase(operatorId)) {
+        // print grammatically accurate message
+        printActivityNumber(operator.getActivityNumber());
+
         operator.viewAllActivities();
         return;
       }
