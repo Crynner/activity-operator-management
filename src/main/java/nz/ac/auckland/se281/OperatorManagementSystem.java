@@ -149,7 +149,7 @@ public class OperatorManagementSystem {
       }
     }
     // otherwise output cli error
-
+    MessageCli.OPERATOR_NOT_FOUND.printMessage(operatorId);
   }
 
   public void createActivity(String activityName, String activityType, String operatorId) {

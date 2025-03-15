@@ -53,6 +53,17 @@ public class Operator {
   }
 
   public void viewAllActivities(){
+    int activityNumber = activityList.size();
+
+    // checks for 0, 1, or more activities respectively
+    if (activityList.isEmpty()) {
+      MessageCli.ACTIVITIES_FOUND.printMessage("are", "no", "ies", ".");
+      return;
+    } else if (activityNumber == 1) {
+      MessageCli.ACTIVITIES_FOUND.printMessage("is", "1", "y", ":");
+    } else {
+      MessageCli.ACTIVITIES_FOUND.printMessage("are", String.valueOf(activityNumber), "ies", ":");
+    }
     for (Activity activity : activityList) {
       MessageCli.ACTIVITY_ENTRY.printMessage(activity.getName(),
           activity.getId(),
