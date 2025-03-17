@@ -1,6 +1,7 @@
 package nz.ac.auckland.se281;
 
 import java.util.ArrayList;
+
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
@@ -61,7 +62,7 @@ public class Operator {
     return addFilteredActivityMsgs("");
   }
 
-  public ArrayList<String> addFilteredActivityMsgs(String matchPhrase){
+  public ArrayList<String> addFilteredActivityMsgs(String matchPhrase) {
     ArrayList<String> activityMsgs = new ArrayList<>();
     for (Activity activity : activityList) {
       // uses abstracted conditional for readability, adding formatted string to returned ArrayList
