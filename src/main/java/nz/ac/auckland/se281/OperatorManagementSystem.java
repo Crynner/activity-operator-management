@@ -3,6 +3,7 @@ package nz.ac.auckland.se281;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
@@ -229,15 +230,28 @@ public class OperatorManagementSystem {
   }
 
   public void addPublicReview(String activityId, String[] options) {
-    // TODO implement
+    Map<String, String> reviewDetails = new HashMap<>();
+    reviewDetails.put("name", options[0]);
+    reviewDetails.put("anonymous", options[1]);
+    reviewDetails.put("rating", options[2]);
+    reviewDetails.put("comment", options[3]);
   }
 
   public void addPrivateReview(String activityId, String[] options) {
-    // TODO implement
+    Map<String, String> reviewDetails = new HashMap<>();
+    reviewDetails.put("name", options[0]);
+    reviewDetails.put("email", options[1]);
+    reviewDetails.put("rating", options[2]);
+    reviewDetails.put("comment", options[3]);
+    reviewDetails.put("followup", options[4]);
   }
 
   public void addExpertReview(String activityId, String[] options) {
-    // TODO implement
+    Map<String, String> reviewDetails = new HashMap<>();
+    reviewDetails.put("name", options[0]);
+    reviewDetails.put("rating", options[1]);
+    reviewDetails.put("comment", options[2]);
+    reviewDetails.put("recommend", options[3]);
   }
 
   public void displayReviews(String activityId) {
