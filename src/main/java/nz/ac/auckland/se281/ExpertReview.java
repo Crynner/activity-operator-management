@@ -9,4 +9,10 @@ public class ExpertReview extends Review{
     super(reviewDetails, id);
     reviewRecommend = (reviewDetails.get("recommend").equals("y"));
   }
+
+  @Override
+  public void printReview() {
+    super.printReview();
+    MessageCli.REVIEW_ENTRY_RECOMMENDED.printMessage();
+  }
 }

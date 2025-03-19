@@ -14,4 +14,13 @@ abstract class Review {
     this.reviewText = reviewDetails.get("comment");
     this.reviewId = id;
   }
+
+  public void printReview() {
+    printReview(reviewName);
+  }
+
+  public void printReview(String name) {
+    MessageCli.REVIEW_ENTRY_HEADER.printMessage(String.valueOf(reviewRating), "5", reviewId, name);
+    MessageCli.REVIEW_ENTRY_REVIEW_TEXT.printMessage(reviewText);
+  }
 }

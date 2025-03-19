@@ -12,5 +12,15 @@ public class PrivateReview extends Review{
     reviewEmail = reviewDetails.get("email");
     
   }
+
+  @Override
+  public void printReview() {
+    super.printReview();
+    if (reviewFollowup) {
+      MessageCli.REVIEW_ENTRY_FOLLOW_UP.printMessage(reviewEmail);
+    } else {
+      MessageCli.REVIEW_ENTRY_RESOLVED.printMessage("-");
+    }
+  }
   
 }
