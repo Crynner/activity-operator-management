@@ -1,10 +1,9 @@
 package nz.ac.auckland.se281;
 
 import java.util.Map;
-
 import nz.ac.auckland.se281.Types.ReviewType;
 
-public class PrivateReview extends Review{
+public class PrivateReview extends Review {
   private boolean reviewFollowup;
   private String reviewEmail;
 

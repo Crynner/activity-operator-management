@@ -41,8 +41,10 @@ public class Activity {
   }
 
   public void addReview(Map<String, String> details, String id, ReviewType reviewType) {
-    String reviewId = id + "-R" + (reviewList.size()+1);
+    // Activity + "-R1",  number based on arraylist size
+    String reviewId = id + "-R" + (reviewList.size() + 1);
     switch (reviewType) {
+      // based on passed reviewType, determine subclass to create from
       case PUBLIC:
         reviewList.add(new PublicReview(details, reviewId));
         break;
@@ -53,20 +55,22 @@ public class Activity {
         reviewList.add(new ExpertReview(details, reviewId));
         break;
     }
+    // confirm review has beed added
     MessageCli.REVIEW_ADDED.printMessage(reviewType.getName(),
         reviewList.getLast().getId(),
         this.activityName);
   }
 
   public void printReviews() {
+    // different message based on number of reviews (size)
     switch (reviewList.size()) {
-      case 0:
+      case 0: // no reviews
         MessageCli.REVIEWS_FOUND.printMessage("are", "no", "s", this.activityName);
         return;
-      case 1:
+      case 1: // singular review
         MessageCli.REVIEWS_FOUND.printMessage("is", "1", "", this.activityName);
         break;
-      default:
+      default: // pluralised review
         MessageCli.REVIEWS_FOUND.printMessage("are",
             String.valueOf(reviewList.size()),
             "s",
@@ -78,6 +82,7 @@ public class Activity {
   }
 
   public Review getReviewById(String reviewId) {
+    // iterate, checking for id match
     for (Review review : reviewList) {
       if (review.getId().equalsIgnoreCase(reviewId)) {
         return review;

@@ -3,7 +3,6 @@ package nz.ac.auckland.se281;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 import nz.ac.auckland.se281.Types.ReviewType;
@@ -265,6 +264,7 @@ public class OperatorManagementSystem {
   }
 
   public void addPrivateReview(String activityId, String[] options) {
+    // binding options to String keys for standardised access
     Map<String, String> reviewDetails = new HashMap<>();
     reviewDetails.put("name", options[0]);
     reviewDetails.put("email", options[1]);
@@ -276,6 +276,7 @@ public class OperatorManagementSystem {
   }
 
   public void addExpertReview(String activityId, String[] options) {
+    // binding options to String keys for standardised access
     Map<String, String> reviewDetails = new HashMap<>();
     reviewDetails.put("name", options[0]);
     reviewDetails.put("rating", options[1]);
@@ -286,6 +287,7 @@ public class OperatorManagementSystem {
   }
 
   public void displayReviews(String activityId) {
+    // find activity to match id
     for (Operator operator : operatorList) {
       Activity targetActivity = operator.findActivity(activityId);
       if (targetActivity != null) {
@@ -300,12 +302,15 @@ public class OperatorManagementSystem {
   public void endorseReview(String reviewId) {
     Review reviewToEndorse = getReviewById(reviewId);
     if (reviewToEndorse == null) {
+      // if review is not found
       MessageCli.REVIEW_NOT_FOUND.printMessage(reviewId);
       return;
     } else if (!(reviewToEndorse instanceof PublicReview)) {
+      // if found review is not a Public subclass of Review
       MessageCli.REVIEW_NOT_ENDORSED.printMessage(reviewId);
       return;
     } else {
+      // downcast to call method (exclusive to PublicReview)
       ((PublicReview) reviewToEndorse).endorseReview();
       MessageCli.REVIEW_ENDORSED.printMessage(reviewId);
     }
