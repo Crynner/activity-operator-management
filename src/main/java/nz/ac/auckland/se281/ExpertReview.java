@@ -1,7 +1,8 @@
 package nz.ac.auckland.se281;
 
-import java.util.Map;
 import java.util.ArrayList;
+import java.util.Map;
+
 import nz.ac.auckland.se281.Types.ReviewType;
 
 public class ExpertReview extends Review {
@@ -23,6 +24,9 @@ public class ExpertReview extends Review {
     super.printReview();
     if (reviewRecommend) {
       MessageCli.REVIEW_ENTRY_RECOMMENDED.printMessage();
+    }
+    if (!reviewImages.isEmpty()) {
+      MessageCli.REVIEW_ENTRY_IMAGES.printMessage(String.join(",", reviewImages));
     }
   }
 }
