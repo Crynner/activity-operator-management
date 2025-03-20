@@ -67,7 +67,10 @@ public class Activity {
         MessageCli.REVIEWS_FOUND.printMessage("is", "1", "", this.activityName);
         break;
       default:
-        MessageCli.REVIEWS_FOUND.printMessage("are", String.valueOf(reviewList.size()), "s", this.activityName);
+        MessageCli.REVIEWS_FOUND.printMessage("are",
+            String.valueOf(reviewList.size()),
+            "s",
+            this.activityName);
     }
     for (Review review : reviewList) {
       review.printReview();

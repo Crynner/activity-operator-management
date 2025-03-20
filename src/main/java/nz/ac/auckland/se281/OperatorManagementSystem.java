@@ -64,7 +64,9 @@ public class OperatorManagementSystem {
     }
   }
 
-  public void addReviewToActivity(Map<String, String> reviewDetails, String activityId, ReviewType reviewType) {
+  public void addReviewToActivity(Map<String, String> reviewDetails,
+                                  String activityId,
+                                  ReviewType reviewType) {
     for (Operator operator : operatorList) {
       Activity foundActivity = operator.findActivity(activityId);
       if (foundActivity != null) {
@@ -305,6 +307,7 @@ public class OperatorManagementSystem {
       return;
     } else {
       ((PublicReview) reviewToEndorse).endorseReview();
+      MessageCli.REVIEW_ENDORSED.printMessage(reviewId);
     }
   }
 

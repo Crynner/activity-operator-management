@@ -43,7 +43,8 @@ abstract class Review {
   }
 
   public void printReview(String name) {
-    MessageCli.REVIEW_ENTRY_HEADER.printMessage(String.valueOf(reviewRating), "5", reviewType.getName(), reviewId, name);
+    MessageCli.REVIEW_ENTRY_HEADER.printMessage(String.valueOf(reviewRating),
+        "5", reviewType.getName(), reviewId, name);
     MessageCli.REVIEW_ENTRY_REVIEW_TEXT.printMessage(reviewText);
   }
 }
