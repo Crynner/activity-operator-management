@@ -74,4 +74,13 @@ public class Activity {
     }
   }
 
+  public Review getReviewById(String reviewId) {
+    for (Review review : reviewList) {
+      if (review.getId().equalsIgnoreCase(reviewId)) {
+        return review;
+      }
+    }
+    return null; // if not found
+  }
+
 }

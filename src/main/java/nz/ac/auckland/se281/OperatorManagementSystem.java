@@ -76,6 +76,16 @@ public class OperatorManagementSystem {
     MessageCli.REVIEW_NOT_ADDED_INVALID_ACTIVITY_ID.printMessage(activityId);
   }
 
+  public Review getReviewById(String reviewId) {
+    for (Operator operator : operatorList) {
+      Review foundReview = operator.getReviewById(reviewId);
+      if (foundReview != null) {
+        return foundReview;
+      }
+    }
+    return null; // if not found
+  }
+
   public void searchOperators(String keyword) {
     keyword = keyword.trim();
 
@@ -278,12 +288,24 @@ public class OperatorManagementSystem {
       Activity targetActivity = operator.findActivity(activityId);
       if (targetActivity != null) {
         targetActivity.printReviews();
+        return;
       }
     }
+    // if activity id does not match any
+    MessageCli.ACTIVITY_NOT_FOUND.printMessage(activityId);
   }
 
   public void endorseReview(String reviewId) {
-    // TODO implement
+    Review reviewToEndorse = getReviewById(reviewId);
+    if (reviewToEndorse == null) {
+      MessageCli.REVIEW_NOT_FOUND.printMessage(reviewId);
+      return;
+    } else if (!(reviewToEndorse instanceof PublicReview)) {
+      MessageCli.REVIEW_NOT_ENDORSED.printMessage(reviewId);
+      return;
+    } else {
+      ((PublicReview) reviewToEndorse).endorseReview();
+    }
   }
 
   public void resolveReview(String reviewId, String response) {

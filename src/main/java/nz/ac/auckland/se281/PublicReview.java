@@ -12,6 +12,10 @@ public class PublicReview extends Review{
     reviewAnon = (reviewDetails.get("anonymous").equals("y"));
   }
 
+  public void endorseReview() {
+    reviewEndorsed = true;
+  }
+
   @Override
   public void printReview() {
     if (reviewAnon) {

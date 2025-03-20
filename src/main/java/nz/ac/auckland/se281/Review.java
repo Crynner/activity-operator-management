@@ -34,6 +34,10 @@ abstract class Review {
     return reviewId;
   }
 
+  public ReviewType getType() {
+    return reviewType;
+  }
+
   public void printReview() {
     printReview(reviewName);
   }

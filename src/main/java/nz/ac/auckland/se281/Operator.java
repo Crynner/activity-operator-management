@@ -84,4 +84,14 @@ public class Operator {
     }
     return activityMsgs;
   }
+
+  public Review getReviewById(String reviewId) {
+    for (Activity activity : activityList) {
+      Review foundReview = activity.getReviewById(reviewId);
+      if (foundReview != null) {
+        return foundReview;
+      }
+    }
+    return null; // if not found
+  }
 }
