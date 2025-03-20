@@ -274,7 +274,12 @@ public class OperatorManagementSystem {
   }
 
   public void displayReviews(String activityId) {
-    // TODO implement
+    for (Operator operator : operatorList) {
+      Activity targetActivity = operator.findActivity(activityId);
+      if (targetActivity != null) {
+        targetActivity.outputReviewSize();
+      }
+    }
   }
 
   public void endorseReview(String reviewId) {

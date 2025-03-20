@@ -55,7 +55,20 @@ public class Activity {
     }
     MessageCli.REVIEW_ADDED.printMessage(reviewType.getName(),
         reviewList.getLast().getId(),
-        getName());
+        this.activityName);
+  }
+
+  public void outputReviewSize() {
+    switch (reviewList.size()) {
+      case 0:
+        MessageCli.REVIEWS_FOUND.printMessage("are", "no", "s", this.activityName);
+        return;
+      case 1:
+        MessageCli.REVIEWS_FOUND.printMessage("is", "1", "", this.activityName);
+        return;
+      default:
+        MessageCli.REVIEWS_FOUND.printMessage("are", String.valueOf(reviewList.size()), "s", this.activityName);
+    }
   }
 
 }
