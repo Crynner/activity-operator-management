@@ -2,15 +2,16 @@ package nz.ac.auckland.se281;
 
 import java.util.Map;
 
+import nz.ac.auckland.se281.Types.ReviewType;
+
 public class PrivateReview extends Review{
   private boolean reviewFollowup;
   private String reviewEmail;
 
   PrivateReview(Map<String, String> reviewDetails, String id) {
-    super(reviewDetails, id);
+    super(reviewDetails, id, ReviewType.PRIVATE);
     reviewFollowup = (reviewDetails.get("followup").equals("y"));
     reviewEmail = reviewDetails.get("email");
-    
   }
 
   @Override
