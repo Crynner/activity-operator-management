@@ -6,6 +6,7 @@ import java.util.Map;
 
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
+import nz.ac.auckland.se281.Types.ReviewType;
 
 public class OperatorManagementSystem {
 
@@ -239,7 +240,7 @@ public class OperatorManagementSystem {
     for (Operator operator : operatorList) {
       Activity foundActivity = operator.findActivity(activityId);
       if (foundActivity != null) {
-        // TODO add stuff and end
+        foundActivity.addReview(reviewDetails, activityId, ReviewType.PUBLIC);
         return;
       }
     }

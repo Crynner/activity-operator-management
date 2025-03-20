@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import nz.ac.auckland.se281.Types.ActivityType;
+import nz.ac.auckland.se281.Types.ReviewType;
 
 public class Activity {
   private String activityName;
@@ -39,8 +40,21 @@ public class Activity {
     return false;
   }
 
-  public void addReview(Map<String, String> details, String id) {
-    reviewList.add(new PublicReview(details, id));
+  public void addReview(Map<String, String> details, String id, ReviewType reviewType) {
+    switch (reviewType) {
+      case PUBLIC:
+        reviewList.add(new PublicReview(details, id));
+        break;
+      case PRIVATE:
+        reviewList.add(new PrivateReview(details, id));
+        break;
+      case EXPERT:
+        reviewList.add(new ExpertReview(details, id));
+        break;
+    }
+    MessageCli.REVIEW_ADDED.printMessage(reviewType.getName(),
+        reviewList.getLast().getId(),
+        getName());
   }
 
 }

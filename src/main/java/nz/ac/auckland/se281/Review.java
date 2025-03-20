@@ -15,6 +15,22 @@ abstract class Review {
     this.reviewId = id;
   }
 
+  public String getName() {
+    return reviewName;
+  }
+
+  public int getRating() {
+    return reviewRating;
+  }
+
+  public String getText() {
+    return reviewText;
+  }
+
+  public String getId() {
+    return reviewId;
+  }
+
   public void printReview() {
     printReview(reviewName);
   }
