@@ -1,11 +1,16 @@
 package nz.ac.auckland.se281;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import nz.ac.auckland.se281.Types.ActivityType;
 
 public class Activity {
   private String activityName;
   private ActivityType activityType;
   private String activityId;
+
+  private ArrayList<Review> reviewList = new ArrayList<>();
 
   Activity(String activityName, ActivityType activityType, String activityId) {
     this.activityName = activityName;
@@ -32,6 +37,10 @@ public class Activity {
       return true;
     }
     return false;
+  }
+
+  public void addReview(Map<String, String> details, String id) {
+    reviewList.add(new PublicReview(details, id));
   }
 
 }

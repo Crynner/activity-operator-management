@@ -235,6 +235,16 @@ public class OperatorManagementSystem {
     reviewDetails.put("anonymous", options[1]);
     reviewDetails.put("rating", options[2]);
     reviewDetails.put("comment", options[3]);
+
+    for (Operator operator : operatorList) {
+      Activity foundActivity = operator.findActivity(activityId);
+      if (foundActivity != null) {
+        // TODO add stuff and end
+        return;
+      }
+    }
+    // if id matches nothing
+    MessageCli.REVIEW_NOT_ADDED_INVALID_ACTIVITY_ID.printMessage(activityId);
   }
 
   public void addPrivateReview(String activityId, String[] options) {

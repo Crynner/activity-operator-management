@@ -45,6 +45,15 @@ public class Operator {
     return this.activityList.size();
   }
 
+  public Activity findActivity(String activityId) {
+    for (Activity activity : activityList) {
+      if (activity.getId().equalsIgnoreCase(activityId)) {
+        return activity;
+      }
+    }
+    return null;
+  }
+
   public void createActivity(String activityName, ActivityType activityType) {
     // passes name, type, and id with size-based incrementer
     activityList.add(new Activity(activityName,
