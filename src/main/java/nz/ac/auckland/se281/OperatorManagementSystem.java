@@ -277,7 +277,7 @@ public class OperatorManagementSystem {
     for (Operator operator : operatorList) {
       Activity targetActivity = operator.findActivity(activityId);
       if (targetActivity != null) {
-        targetActivity.outputReviewSize();
+        targetActivity.printReviews();
       }
     }
   }

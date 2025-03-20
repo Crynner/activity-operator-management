@@ -41,7 +41,7 @@ public class Activity {
   }
 
   public void addReview(Map<String, String> details, String id, ReviewType reviewType) {
-    String reviewId = id + String.format("%03d", reviewList.size()+1);
+    String reviewId = id + "-R" + (reviewList.size()+1);
     switch (reviewType) {
       case PUBLIC:
         reviewList.add(new PublicReview(details, reviewId));
@@ -58,16 +58,19 @@ public class Activity {
         this.activityName);
   }
 
-  public void outputReviewSize() {
+  public void printReviews() {
     switch (reviewList.size()) {
       case 0:
         MessageCli.REVIEWS_FOUND.printMessage("are", "no", "s", this.activityName);
         return;
       case 1:
         MessageCli.REVIEWS_FOUND.printMessage("is", "1", "", this.activityName);
-        return;
+        break;
       default:
         MessageCli.REVIEWS_FOUND.printMessage("are", String.valueOf(reviewList.size()), "s", this.activityName);
+    }
+    for (Review review : reviewList) {
+      review.printReview();
     }
   }
 
