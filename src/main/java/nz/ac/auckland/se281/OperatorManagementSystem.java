@@ -3,6 +3,7 @@ package nz.ac.auckland.se281;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 import nz.ac.auckland.se281.Types.ReviewType;
@@ -329,7 +330,17 @@ public class OperatorManagementSystem {
   }
 
   public void uploadReviewImage(String reviewId, String imageName) {
-    // TODO implement
+    Review reviewForImage = getReviewById(reviewId);
+    if (reviewForImage == null) {
+      // review not found
+      MessageCli.REVIEW_NOT_FOUND.printMessage(reviewId);
+    } else if (!(reviewForImage instanceof ExpertReview)) {
+      // review is not Expert
+      MessageCli.REVIEW_IMAGE_NOT_ADDED_NOT_EXPERT.printMessage(reviewId);
+    } else {
+      ((ExpertReview) reviewForImage).addImage(imageName);
+      MessageCli.REVIEW_IMAGE_ADDED.printMessage(imageName, reviewId);
+    }
   }
 
   public void displayTopActivities() {
