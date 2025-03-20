@@ -64,6 +64,18 @@ public class OperatorManagementSystem {
     }
   }
 
+  public void addReviewToActivity(Map<String, String> reviewDetails, String activityId, ReviewType reviewType) {
+    for (Operator operator : operatorList) {
+      Activity foundActivity = operator.findActivity(activityId);
+      if (foundActivity != null) {
+        foundActivity.addReview(reviewDetails, activityId, reviewType);
+        return;
+      }
+    }
+    // if id matches nothing
+    MessageCli.REVIEW_NOT_ADDED_INVALID_ACTIVITY_ID.printMessage(activityId);
+  }
+
   public void searchOperators(String keyword) {
     keyword = keyword.trim();
 
@@ -237,15 +249,7 @@ public class OperatorManagementSystem {
     reviewDetails.put("rating", options[2]);
     reviewDetails.put("comment", options[3]);
 
-    for (Operator operator : operatorList) {
-      Activity foundActivity = operator.findActivity(activityId);
-      if (foundActivity != null) {
-        foundActivity.addReview(reviewDetails, activityId, ReviewType.PUBLIC);
-        return;
-      }
-    }
-    // if id matches nothing
-    MessageCli.REVIEW_NOT_ADDED_INVALID_ACTIVITY_ID.printMessage(activityId);
+    addReviewToActivity(reviewDetails, activityId, ReviewType.PUBLIC);
   }
 
   public void addPrivateReview(String activityId, String[] options) {
@@ -255,6 +259,8 @@ public class OperatorManagementSystem {
     reviewDetails.put("rating", options[2]);
     reviewDetails.put("comment", options[3]);
     reviewDetails.put("followup", options[4]);
+
+    addReviewToActivity(reviewDetails, activityId, ReviewType.PRIVATE);
   }
 
   public void addExpertReview(String activityId, String[] options) {
@@ -263,6 +269,8 @@ public class OperatorManagementSystem {
     reviewDetails.put("rating", options[1]);
     reviewDetails.put("comment", options[2]);
     reviewDetails.put("recommend", options[3]);
+
+    addReviewToActivity(reviewDetails, activityId, ReviewType.EXPERT);
   }
 
   public void displayReviews(String activityId) {

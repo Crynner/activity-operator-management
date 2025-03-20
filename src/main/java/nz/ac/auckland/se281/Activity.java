@@ -41,15 +41,16 @@ public class Activity {
   }
 
   public void addReview(Map<String, String> details, String id, ReviewType reviewType) {
+    String reviewId = id + String.format("%03d", reviewList.size()+1);
     switch (reviewType) {
       case PUBLIC:
-        reviewList.add(new PublicReview(details, id));
+        reviewList.add(new PublicReview(details, reviewId));
         break;
       case PRIVATE:
-        reviewList.add(new PrivateReview(details, id));
+        reviewList.add(new PrivateReview(details, reviewId));
         break;
       case EXPERT:
-        reviewList.add(new ExpertReview(details, id));
+        reviewList.add(new ExpertReview(details, reviewId));
         break;
     }
     MessageCli.REVIEW_ADDED.printMessage(reviewType.getName(),
