@@ -6,11 +6,17 @@ import nz.ac.auckland.se281.Types.ReviewType;
 public class PrivateReview extends Review {
   private boolean reviewFollowup;
   private String reviewEmail;
+  private String reviewResolveMsg = "-";
 
   PrivateReview(Map<String, String> reviewDetails, String id) {
     super(reviewDetails, id, ReviewType.PRIVATE);
     reviewFollowup = (reviewDetails.get("followup").equals("y"));
     reviewEmail = reviewDetails.get("email");
+  }
+
+  public void resolveReview(String resolutionMsg) {
+    reviewResolveMsg = resolutionMsg;
+    reviewFollowup = false;
   }
 
   @Override
@@ -19,7 +25,7 @@ public class PrivateReview extends Review {
     if (reviewFollowup) {
       MessageCli.REVIEW_ENTRY_FOLLOW_UP.printMessage(reviewEmail);
     } else {
-      MessageCli.REVIEW_ENTRY_RESOLVED.printMessage("-");
+      MessageCli.REVIEW_ENTRY_RESOLVED.printMessage(reviewResolveMsg);
     }
   }
   

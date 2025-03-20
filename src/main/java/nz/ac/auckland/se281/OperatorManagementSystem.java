@@ -304,11 +304,9 @@ public class OperatorManagementSystem {
     if (reviewToEndorse == null) {
       // if review is not found
       MessageCli.REVIEW_NOT_FOUND.printMessage(reviewId);
-      return;
     } else if (!(reviewToEndorse instanceof PublicReview)) {
       // if found review is not a Public subclass of Review
       MessageCli.REVIEW_NOT_ENDORSED.printMessage(reviewId);
-      return;
     } else {
       // downcast to call method (exclusive to PublicReview)
       ((PublicReview) reviewToEndorse).endorseReview();
@@ -317,7 +315,17 @@ public class OperatorManagementSystem {
   }
 
   public void resolveReview(String reviewId, String response) {
-    // TODO implement
+    Review reviewToResolve = getReviewById(reviewId);
+    if (reviewToResolve == null) {
+      // if review not found
+      MessageCli.REVIEW_NOT_FOUND.printMessage(reviewId);
+    } else if (!(reviewToResolve instanceof PrivateReview)) {
+      // if found review is not a Private review
+      MessageCli.REVIEW_NOT_RESOLVED.printMessage(reviewId);
+    } else {
+      ((PrivateReview) reviewToResolve).resolveReview(response);
+      MessageCli.REVIEW_RESOLVED.printMessage(reviewId);
+    }
   }
 
   public void uploadReviewImage(String reviewId, String imageName) {
