@@ -256,6 +256,7 @@ public class OperatorManagementSystem {
   public void addPublicReview(String activityId, String[] options) {
     activityId = activityId.trim();
 
+    // binding string array to string map for standardised access in abstract class
     Map<String, String> reviewDetails = new HashMap<>();
     reviewDetails.put("name", options[0]);
     reviewDetails.put("anonymous", options[1]);
@@ -364,7 +365,8 @@ public class OperatorManagementSystem {
       Location operatorLocation = operator.getLocation();
       Activity actToCheck = operator.findHighestRatedActivity();
 
-      // if review exists, AND (activity is first for location OR activity has higher rating than stored highest)
+      // if review exists, AND
+      // (activity is first for location OR activity has higher rating than stored highest)
       if (actToCheck != null
           && (!topActivities.containsKey(operator.getLocation())
               || topActivities.get(operatorLocation).getAvgRating() < actToCheck.getAvgRating())) {

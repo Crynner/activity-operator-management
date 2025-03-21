@@ -12,7 +12,8 @@ abstract class Review {
 
   Review(Map<String, String> reviewDetails, String id, ReviewType reviewType) {
     this.reviewName = reviewDetails.get("name");
-    this.reviewRating = Integer.parseInt(reviewDetails.get("rating")); // TODO limit setting for rating
+    // TODO limit setting for rating
+    this.reviewRating = Integer.parseInt(reviewDetails.get("rating"));
     this.reviewText = reviewDetails.get("comment");
     this.reviewId = id;
     this.reviewType = reviewType;
