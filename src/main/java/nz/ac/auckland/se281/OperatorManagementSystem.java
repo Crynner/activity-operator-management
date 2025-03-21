@@ -254,6 +254,8 @@ public class OperatorManagementSystem {
   }
 
   public void addPublicReview(String activityId, String[] options) {
+    activityId = activityId.trim();
+
     Map<String, String> reviewDetails = new HashMap<>();
     reviewDetails.put("name", options[0]);
     reviewDetails.put("anonymous", options[1]);
@@ -264,6 +266,8 @@ public class OperatorManagementSystem {
   }
 
   public void addPrivateReview(String activityId, String[] options) {
+    activityId = activityId.trim();
+
     // binding options to String keys for standardised access
     Map<String, String> reviewDetails = new HashMap<>();
     reviewDetails.put("name", options[0]);
@@ -276,6 +280,8 @@ public class OperatorManagementSystem {
   }
 
   public void addExpertReview(String activityId, String[] options) {
+    activityId = activityId.trim();
+
     // binding options to String keys for standardised access
     Map<String, String> reviewDetails = new HashMap<>();
     reviewDetails.put("name", options[0]);
@@ -287,6 +293,8 @@ public class OperatorManagementSystem {
   }
 
   public void displayReviews(String activityId) {
+    activityId = activityId.trim();
+
     // find activity to match id
     for (Operator operator : operatorList) {
       Activity targetActivity = operator.findActivity(activityId);
@@ -300,6 +308,8 @@ public class OperatorManagementSystem {
   }
 
   public void endorseReview(String reviewId) {
+    reviewId = reviewId.trim();
+
     Review reviewToEndorse = getReviewById(reviewId);
     if (reviewToEndorse == null) {
       // if review is not found
@@ -315,6 +325,9 @@ public class OperatorManagementSystem {
   }
 
   public void resolveReview(String reviewId, String response) {
+    reviewId = reviewId.trim();
+    response = response.trim();
+
     Review reviewToResolve = getReviewById(reviewId);
     if (reviewToResolve == null) {
       // if review not found
@@ -329,6 +342,9 @@ public class OperatorManagementSystem {
   }
 
   public void uploadReviewImage(String reviewId, String imageName) {
+    reviewId = reviewId.trim();
+    imageName = imageName.trim();
+
     Review reviewForImage = getReviewById(reviewId);
     if (reviewForImage == null) {
       // review not found

@@ -60,16 +60,17 @@ public class Activity {
       // based on passed reviewType, determine subclass to create from
       case PUBLIC:
         reviewList.add(new PublicReview(details, reviewId));
+        reviewRatings.add(reviewList.getLast().getRating());
         break;
       case PRIVATE:
         reviewList.add(new PrivateReview(details, reviewId));
         break;
       case EXPERT:
         reviewList.add(new ExpertReview(details, reviewId));
+        reviewRatings.add(reviewList.getLast().getRating());
         break;
     }
-    // add rating to ratinglist
-    reviewRatings.add(reviewList.getLast().getRating());
+    
     // confirm review has been added
     MessageCli.REVIEW_ADDED.printMessage(reviewType.getName(),
         reviewList.getLast().getId(),
