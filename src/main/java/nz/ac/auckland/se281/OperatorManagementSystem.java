@@ -359,6 +359,10 @@ public class OperatorManagementSystem {
     for (Location location : Location.values()) {
       if (!topActivities.containsKey(location)) {
         MessageCli.NO_REVIEWED_ACTIVITIES.printMessage(location.getFullName());
+      } else {
+        MessageCli.TOP_ACTIVITY.printMessage(location.getFullName(),
+            topActivities.get(location).getName(),
+            String.format("%.1f", topActivities.get(location).getAvgRating()));
       }
     }
   }
