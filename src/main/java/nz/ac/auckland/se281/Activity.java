@@ -12,6 +12,7 @@ public class Activity {
   private String activityId;
 
   private ArrayList<Review> reviewList = new ArrayList<>();
+  private Float reviewAvg = null; // object to allow for null
 
   Activity(String activityName, ActivityType activityType, String activityId) {
     this.activityName = activityName;
@@ -29,6 +30,10 @@ public class Activity {
 
   public String getId() {
     return this.activityId;
+  }
+
+  public Float getAvgRating() {
+    return reviewAvg;
   }
 
   public boolean contains(String matchPhrase) {

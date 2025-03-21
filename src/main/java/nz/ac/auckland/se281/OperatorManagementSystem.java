@@ -3,7 +3,6 @@ package nz.ac.auckland.se281;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 import nz.ac.auckland.se281.Types.ReviewType;
@@ -344,6 +343,15 @@ public class OperatorManagementSystem {
   }
 
   public void displayTopActivities() {
-    // TODO implement
+    // TODO confirm -> are review differences beyond 1dp considered?
+    Map<Location, Activity> topActivities = new HashMap<>();
+    for (Operator operator : operatorList) {
+      Location operatorLocation = operator.getLocation();
+      Activity activityToCheck = operator.findHighestRatedActivity();
+      if (!topActivities.containsKey(operator.getLocation())
+          || topActivities.get(operatorLocation).getAvgRating() < activityToCheck.getAvgRating()) {
+        topActivities.put(operatorLocation, activityToCheck);
+      }
+    }
   }
 }

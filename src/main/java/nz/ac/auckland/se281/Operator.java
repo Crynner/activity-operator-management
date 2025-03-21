@@ -93,4 +93,8 @@ public class Operator {
     }
     return null; // if not found
   }
+
+  public Activity findHighestRatedActivity() {
+    return null;
+  }
 }
