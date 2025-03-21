@@ -343,14 +343,22 @@ public class OperatorManagementSystem {
   }
 
   public void displayTopActivities() {
-    // TODO confirm -> are review differences beyond 1dp considered?
     Map<Location, Activity> topActivities = new HashMap<>();
     for (Operator operator : operatorList) {
       Location operatorLocation = operator.getLocation();
-      Activity activityToCheck = operator.findHighestRatedActivity();
-      if (!topActivities.containsKey(operator.getLocation())
-          || topActivities.get(operatorLocation).getAvgRating() < activityToCheck.getAvgRating()) {
-        topActivities.put(operatorLocation, activityToCheck);
+      Activity actToCheck = operator.findHighestRatedActivity();
+
+      // if review exists, AND (activity is first for location OR activity has higher rating than stored highest)
+      if (actToCheck.getAvgRating() != null
+          && (!topActivities.containsKey(operator.getLocation())
+              || topActivities.get(operatorLocation).getAvgRating() < actToCheck.getAvgRating())) {
+        topActivities.put(operatorLocation, actToCheck);
+      }
+    }
+    // after all operators, iterate over Locations to find
+    for (Location location : Location.values()) {
+      if (!topActivities.containsKey(location)) {
+        MessageCli.NO_REVIEWED_ACTIVITIES.printMessage(location.getFullName());
       }
     }
   }
