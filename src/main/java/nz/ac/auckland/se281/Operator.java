@@ -95,6 +95,20 @@ public class Operator {
   }
 
   public Activity findHighestRatedActivity() {
-    return null;
+    // if no activities, return null
+    if (activityList.isEmpty()) {
+      return null;
+    }
+    Activity highestRated = null;
+    for (Activity activity : activityList) {
+      // if activity has a valid review average, AND (current highest either doesn't exist
+      // OR is lower than activity review average)
+      if (activity.getAvgRating() != null
+          && (highestRated == null
+              || highestRated.getAvgRating() < activity.getAvgRating())) {
+        highestRated = activity;
+      }
+    }
+    return highestRated;
   }
 }

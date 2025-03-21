@@ -349,7 +349,7 @@ public class OperatorManagementSystem {
       Activity actToCheck = operator.findHighestRatedActivity();
 
       // if review exists, AND (activity is first for location OR activity has higher rating than stored highest)
-      if (actToCheck.getAvgRating() != null
+      if (actToCheck != null
           && (!topActivities.containsKey(operator.getLocation())
               || topActivities.get(operatorLocation).getAvgRating() < actToCheck.getAvgRating())) {
         topActivities.put(operatorLocation, actToCheck);

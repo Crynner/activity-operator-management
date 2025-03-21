@@ -12,7 +12,7 @@ public class Activity {
   private String activityId;
 
   private ArrayList<Review> reviewList = new ArrayList<>();
-  private Float reviewAvg = null; // object to allow for null
+  private ArrayList<Integer> reviewRatings = new ArrayList<>();
 
   Activity(String activityName, ActivityType activityType, String activityId) {
     this.activityName = activityName;
@@ -33,7 +33,15 @@ public class Activity {
   }
 
   public Float getAvgRating() {
-    return reviewAvg;
+    // if no reviews, return 
+    if (reviewRatings.isEmpty()) {
+      return null;
+    }
+    int ratingTotal = 0;
+    for (Integer rating : reviewRatings) {
+      ratingTotal += rating;
+    }
+    return (float) ratingTotal / reviewRatings.size();
   }
 
   public boolean contains(String matchPhrase) {
@@ -60,7 +68,9 @@ public class Activity {
         reviewList.add(new ExpertReview(details, reviewId));
         break;
     }
-    // confirm review has beed added
+    // add rating to ratinglist
+    reviewRatings.add(reviewList.getLast().getRating());
+    // confirm review has been added
     MessageCli.REVIEW_ADDED.printMessage(reviewType.getName(),
         reviewList.getLast().getId(),
         this.activityName);
