@@ -19,7 +19,7 @@ public class OperatorManagementSystem {
     locationActNames = new HashMap<>();
     operatorList = new ArrayList<>();
 
-    // initialise location maps
+    // initialise location maps - starting id 0 on IdTracker, 
     for (Location location : Location.values()) {
       locationIdTracker.put(location, 0);
       locationActNames.put(location, new ArrayList<>());
@@ -27,39 +27,30 @@ public class OperatorManagementSystem {
   }
 
   public Location findLocation(String input) {
-    input = input.toLowerCase();
-    // if input corresponds to Location
-    if (Location.fromString(input) != null) {
-      return Location.fromString(input);
-    } else { // otherwise match substrings
-      for (Location location : Location.values()) {
-        if (location.getNameEnglish().toLowerCase().contains(input)
-            || location.getNameTeReo().toLowerCase().contains(input)
-            || location.getLocationAbbreviation().toLowerCase().contains(input)) {
-          
-          return location;
-        }
+    // check for substring match in all location names (english, maori, abbrev).
+    // for cases which multiple location matches, location is by declaration order.
+    for (Location location : Location.values()) {
+      if (location.getNameEnglish().toLowerCase().contains(input)
+          || location.getNameTeReo().toLowerCase().contains(input)
+          || location.getLocationAbbreviation().toLowerCase().contains(input)) {
+        return location;
       }
-      // if input does not match at all
-      return null;
     }
+    // if input does not match at all
+    return null;
   }
 
-  // could be made static
   public void printActivityNumber(Integer totalNumber) {
-    // prints activity number message based on passed number for 0, 1, and more respectively.
     switch (totalNumber) {
-      case 0:
+      case 0: // zero activities found
         MessageCli.ACTIVITIES_FOUND.printMessage("are", "no", "ies", ".");
-        return;
-      case 1:
+        break;
+      case 1: // one activity found
         MessageCli.ACTIVITIES_FOUND.printMessage("is", "1", "y", ":");
         break;
-      default:
+      default: // more than one activity found
         MessageCli.ACTIVITIES_FOUND.printMessage("are",
-            totalNumber.toString(),
-            "ies",
-            ":");
+            totalNumber.toString(), "ies", ":");
     }
   }
 
@@ -88,56 +79,41 @@ public class OperatorManagementSystem {
   }
 
   public void searchOperators(String keyword) {
-    keyword = keyword.trim();
+    // standardise string for case-checking
+    keyword = keyword.trim().toLowerCase();
 
     ArrayList<Operator> filteredOperators = new ArrayList<>();
 
+    // first check for wildcard operator, prints all
     if (keyword.equals("*")) {
       filteredOperators = operatorList;
     } else {
-      // if keyword corresponds to valid location
-      if (findLocation(keyword) != null) {
-        Location location = findLocation(keyword);
-  
-        // add all operators with matching location
-        for (Operator operator : operatorList) {
-          if (operator.getLocation() == location) {
-            filteredOperators.add(operator);
-          }
-        }
-      }
-
-      for (Operator op : operatorList) {
-        // if keyword is found as substring and not already in filteredOperators, add it
-        if (op.getName().toLowerCase().contains(keyword.toLowerCase())
-            && !filteredOperators.contains(op)) {
-          filteredOperators.add(op);
+      Location location = findLocation(keyword);
+      for (Operator operator : operatorList) {
+        // check each operator if keyword is a substring of location or name, add if true.
+        // even if location is null (no matching location), acts as false (cannot meet condition).
+        if (operator.getLocation() == location
+            || operator.getName().toLowerCase().contains(keyword)) {
+          filteredOperators.add(operator);
         }
       }
     }
-    
-    if (!filteredOperators.isEmpty()) {
-      // if exactly one operators match
-      if (filteredOperators.size() == 1) {
-        MessageCli.OPERATORS_FOUND.printMessage("is", "1", "", ":");
-      } else { // if more than one operators match
-        MessageCli.OPERATORS_FOUND.printMessage("are",
-            String.valueOf(filteredOperators.size()),
-            "s",
-            ":");
-      }
-      
-      // "finally", print each Operator entry
-      for (Operator operator : filteredOperators) {
-        MessageCli.OPERATOR_ENTRY.printMessage(operator.getName(),
-            operator.getId(),
-            operator.getLocation().getFullName());
-      }
-    } else { // if no operators match
+
+    if (filteredOperators.isEmpty()) { // no operators found
       MessageCli.OPERATORS_FOUND.printMessage("are",
-          "no",
-          "s",
-          ".");
+          "no", "s", ".");
+      return; // end here, no need to iterate over filtered arraylist
+    } else if (filteredOperators.size() == 1) { // one operator found
+      MessageCli.OPERATORS_FOUND.printMessage("is", "1", "", ":");
+    } else { // more than one operator found
+      MessageCli.OPERATORS_FOUND.printMessage("are", String.valueOf(filteredOperators.size()),
+          "s", ":");
+    }
+
+    // finally, print each operator in formatted message
+    for (Operator operator : filteredOperators) {
+      MessageCli.OPERATOR_ENTRY.printMessage(operator.getName(),
+          operator.getId(), operator.getLocation().getFullName());
     }
   }
 
