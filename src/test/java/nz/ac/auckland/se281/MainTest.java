@@ -1064,7 +1064,72 @@ public class MainTest {
       
       assertContains("Successfully created operator");
     }
+
+    @Test
+    public void T4_08_invalid_review_rating_low() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'United Alliance'",
+        "akl",
+        CREATE_ACTIVITY,
+        "'Ambiguous Ambiguity'",
+        "other",
+        "ua-akl-001",
+        ADD_PUBLIC_REVIEW,
+        "ua-akl-001-001",
+        options("TestUser", "n", "0", "comment"),
+        DISPLAY_REVIEWS,
+        "ua-akl-001-001",
+        EXIT
+      );
+      
+      assertContains("[1/5]");
+    }
+
+    @Test
+    public void T4_09_invalid_review_rating_high() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'United Alliance'",
+        "akl",
+        CREATE_ACTIVITY,
+        "'Ambiguous Ambiguity'",
+        "other",
+        "ua-akl-001",
+        ADD_PUBLIC_REVIEW,
+        "ua-akl-001-001",
+        options("TestUser", "n", "999", "comment"),
+        DISPLAY_REVIEWS,
+        "ua-akl-001-001",
+        EXIT
+      );
+      
+      assertContains("[5/5]");
+    }
+
+    @Test
+    public void T4_10_case_sensitive_display_review() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'United Alliance'",
+        "akl",
+        CREATE_ACTIVITY,
+        "'Ambiguous Ambiguity'",
+        "other",
+        "ua-akl-001",
+        ADD_PUBLIC_REVIEW,
+        "ua-akl-001-001",
+        options("TestUser", "n", "999", "comment"),
+        DISPLAY_REVIEWS,
+        "ua-akl-001-001",
+        EXIT
+      );
+      
+      assertContains("(UA-AKL-001-001-R1)");
+    }
   }
+
+  
 
   private static final Object[] CREATE_14_OPERATORS =
       new Object[] {

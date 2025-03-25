@@ -12,8 +12,17 @@ abstract class Review {
 
   Review(Map<String, String> reviewDetails, String id, ReviewType reviewType) {
     this.reviewName = reviewDetails.get("name");
-    // TODO limit setting for rating
-    this.reviewRating = Integer.parseInt(reviewDetails.get("rating"));
+
+    // case rating if out of limits, otherwise regular
+    int rawRating = Integer.parseInt(reviewDetails.get("rating"));
+    if (rawRating > 5) {
+      this.reviewRating = 5;
+    } else if (rawRating < 1) {
+      this.reviewRating = 1;
+    } else {
+      this.reviewRating = rawRating;
+    }
+    
     this.reviewText = reviewDetails.get("comment");
     this.reviewId = id;
     this.reviewType = reviewType;
