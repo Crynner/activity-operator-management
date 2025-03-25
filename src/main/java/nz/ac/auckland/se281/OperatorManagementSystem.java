@@ -9,20 +9,16 @@ import nz.ac.auckland.se281.Types.ReviewType;
 
 public class OperatorManagementSystem {
 
-  private Map<Location, Integer> locationIdTracker;
-  private Map<Location, ArrayList<String>> locationActNames;
-  private ArrayList<Operator> operatorList;
+  private Map<Location, Integer> locationIdTracker = new HashMap<>();
+  private Map<Location, ArrayList<String>> locationOperatorNames = new HashMap<>();
+  private ArrayList<Operator> operatorList = new ArrayList<>();
 
   // Do not change the parameters of the constructor
   public OperatorManagementSystem() {
-    locationIdTracker = new HashMap<>();
-    locationActNames = new HashMap<>();
-    operatorList = new ArrayList<>();
-
     // initialise location maps - starting id 0 on IdTracker, 
     for (Location location : Location.values()) {
       locationIdTracker.put(location, 0);
-      locationActNames.put(location, new ArrayList<>());
+      locationOperatorNames.put(location, new ArrayList<>()); // used only in create-operator
     }
   }
 
@@ -139,7 +135,7 @@ public class OperatorManagementSystem {
 
     // checks if any operators exist, and if operator is already catalogued (same name and location)
     if (!operatorList.isEmpty()
-        && locationActNames.get(foundLocation).contains(operatorName)) {
+        && locationOperatorNames.get(foundLocation).contains(operatorName)) {
       MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(operatorName,
           foundLocation.getFullName());
       return;
@@ -151,7 +147,7 @@ public class OperatorManagementSystem {
 
     // add operator to list, activity name to location list, outputs to terminal
     operatorList.add(new Operator(operatorName, foundLocation, idNumber));
-    locationActNames.get(operatorList.getLast().getLocation()).add(operatorName);
+    locationOperatorNames.get(operatorList.getLast().getLocation()).add(operatorName);
 
     MessageCli.OPERATOR_CREATED.printMessage(operatorName,
         operatorList.getLast().getId(),

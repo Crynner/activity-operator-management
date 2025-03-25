@@ -24,7 +24,8 @@ abstract class Review {
     }
     
     this.reviewText = reviewDetails.get("comment");
-    this.reviewId = id;
+    // as it depends on user input, casting upper case for when user input is lower/mixed
+    this.reviewId = id.toUpperCase();
     this.reviewType = reviewType;
   }
 
