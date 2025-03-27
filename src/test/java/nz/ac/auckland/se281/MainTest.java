@@ -1021,6 +1021,7 @@ public class MainTest {
       );
       
       assertContains("Successfully created operator");
+      // ending bracket denotes message from search function
       assertContains("located in 'Auckland | Tāmaki Makaurau')");
     }
 

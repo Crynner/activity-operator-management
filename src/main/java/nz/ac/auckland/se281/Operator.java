@@ -1,6 +1,7 @@
 package nz.ac.auckland.se281;
 
 import java.util.ArrayList;
+
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
@@ -57,12 +58,12 @@ public class Operator {
     // passes name, type, and id with size-based incrementer
     activityList.add(new Activity(activityName,
         activityType,
-        getId() + "-" + String.format("%03d", activityList.size() + 1)));
+        operatorId + "-" + String.format("%03d", activityList.size() + 1)));
     
     MessageCli.ACTIVITY_CREATED.printMessage(activityName,
         activityList.getLast().getId(),
         activityType.getName(),
-        getName());
+        operatorName);
   }
 
   public ArrayList<String> addAllActivityMsgs() {
@@ -76,9 +77,7 @@ public class Operator {
       // uses abstracted conditional for readability, adding formatted string to returned ArrayList
       if (activity.contains(matchPhrase)) {
         activityMsgs.add(MessageCli.ACTIVITY_ENTRY.getMessage(activity.getName(),
-            activity.getId(),
-            activity.getType().getName(),
-            operatorName));
+            activity.getId(), activity.getType().getName(), operatorName));
       }
     }
     return activityMsgs;
