@@ -967,7 +967,7 @@ public class MainTest {
     public void reset() {}
 
     @Test
-    public void T4_01_lowercase_operator_name() throws Exception {
+    public void T4_C1_01_lowercase_operator_name() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'the place'",
@@ -981,7 +981,7 @@ public class MainTest {
     }
 
     @Test
-    public void T4_02_short_operator_name() throws Exception {
+    public void T4_C1_02_short_operator_name() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'TP'",
@@ -993,7 +993,7 @@ public class MainTest {
     }
 
     @Test
-    public void T4_03_matching_name_location_search() throws Exception {
+    public void T4_C1_03_matching_name_location_search() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'akl test scene'",
@@ -1010,7 +1010,7 @@ public class MainTest {
     }
 
     @Test
-    public void T4_04_macron_location_search_create() throws Exception {
+    public void T4_C1_04_macron_location_search_create() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'Generic Operator Name'",
@@ -1026,7 +1026,7 @@ public class MainTest {
     }
 
     @Test // not sure the correct protocol to handle this...
-    public void T4_05_operator_startswith_special_character() throws Exception {
+    public void T4_C1_05_operator_startswith_special_character() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'!Generic -Name'",
@@ -1041,7 +1041,7 @@ public class MainTest {
     }
 
     @Test
-    public void T4_06_operator_name_double_space() throws Exception {
+    public void T4_C1_06_operator_name_double_space() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'Doubled  space  Operator'",
@@ -1055,7 +1055,7 @@ public class MainTest {
     }
 
     @Test
-    public void T4_07_operator_name_thai() throws Exception {
+    public void T4_C1_07_operator_name_thai() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'การทดลอง'",
@@ -1067,7 +1067,24 @@ public class MainTest {
     }
 
     @Test
-    public void T4_08_invalid_review_rating_low() throws Exception {
+    public void T4_C1_08_location_search_multiple_match() throws Exception {
+      runCommands(
+        CREATE_OPERATOR,
+        "'Microcosm'",
+        "wlg",
+        CREATE_OPERATOR,
+        "'Macrocosm'",
+        "nsn",
+        SEARCH_OPERATORS,
+        "e",
+        EXIT
+      );
+      
+      assertContains("There are 2 matching operators found:");
+    }
+
+    @Test
+    public void T4_C2_01_invalid_review_rating_low() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'United Alliance'",
@@ -1088,7 +1105,7 @@ public class MainTest {
     }
 
     @Test
-    public void T4_09_invalid_review_rating_high() throws Exception {
+    public void T4_C2_02_invalid_review_rating_high() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'United Alliance'",
@@ -1109,7 +1126,7 @@ public class MainTest {
     }
 
     @Test
-    public void T4_10_case_sensitive_display_review() throws Exception {
+    public void T4_C2_03_case_sensitive_display_review() throws Exception {
       runCommands(
         CREATE_OPERATOR,
         "'United Alliance'",

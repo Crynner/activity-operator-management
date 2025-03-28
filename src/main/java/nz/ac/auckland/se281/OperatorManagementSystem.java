@@ -22,18 +22,18 @@ public class OperatorManagementSystem {
     }
   }
 
-  public Location findLocation(String input) {
+  public ArrayList<Location> findLocations(String input) {
+    ArrayList<Location> matchingLocations = new ArrayList<>();
     // check for substring match in all location names (english, maori, abbrev).
-    // for cases which multiple location matches, location is by declaration order.
     for (Location location : Location.values()) {
       if (location.getNameEnglish().toLowerCase().contains(input)
           || location.getNameTeReo().toLowerCase().contains(input)
           || location.getLocationAbbreviation().toLowerCase().contains(input)) {
-        return location;
+        matchingLocations.add(location);
       }
     }
-    // if input does not match at all
-    return null;
+    // return null if input doesn't match any locations, else return list of matches
+    return matchingLocations;
   }
 
   public void printActivityNumber(Integer totalNumber) {
@@ -84,11 +84,10 @@ public class OperatorManagementSystem {
     if (keyword.equals("*")) {
       filteredOperators = operatorList;
     } else {
-      Location location = findLocation(keyword);
+      ArrayList<Location> locations = findLocations(keyword);
       for (Operator operator : operatorList) {
         // check each operator if keyword is a substring of location or name, add if true.
-        // even if location is null (no matching location), acts as false (cannot meet condition).
-        if (operator.getLocation() == location
+        if (locations.contains(operator.getLocation())
             || operator.getName().toLowerCase().contains(keyword)) {
           filteredOperators.add(operator);
         }
@@ -208,9 +207,10 @@ public class OperatorManagementSystem {
       }
 
     } else {
+      ArrayList<Location> locations = findLocations(keyword);
       for (Operator operator : operatorList) {
         // all activities are added (matched location), or some filtered activities are added.
-        if (operator.getLocation() == findLocation(keyword)) {
+        if (locations.contains(operator.getLocation())) {
           filteredActivityMsgs.addAll(operator.addAllActivityMsgs());
         } else {
           filteredActivityMsgs.addAll(operator.addFilteredActivityMsgs(keyword));
