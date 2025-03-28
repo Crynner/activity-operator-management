@@ -15,6 +15,7 @@ public class PrivateReview extends Review {
   }
 
   public void resolveReview(String resolutionMsg) {
+    // change message and need-to-followup-requirement
     reviewResolveMsg = resolutionMsg;
     reviewFollowup = false;
   }
@@ -22,6 +23,7 @@ public class PrivateReview extends Review {
   @Override
   public void printReview() {
     super.printReview();
+    // depending on whether review has been resolved or not
     if (reviewFollowup) {
       MessageCli.REVIEW_ENTRY_FOLLOW_UP.printMessage(reviewEmail);
     } else {

@@ -22,7 +22,7 @@ public class OperatorManagementSystem {
     }
   }
 
-  public ArrayList<Location> findLocations(String input) {
+  private ArrayList<Location> findLocations(String input) {
     ArrayList<Location> matchingLocations = new ArrayList<>();
     // check for substring match in all location names (english, maori, abbrev).
     for (Location location : Location.values()) {
@@ -32,11 +32,11 @@ public class OperatorManagementSystem {
         matchingLocations.add(location);
       }
     }
-    // return null if input doesn't match any locations, else return list of matches
+    // return arraylist, empty or not (shouldn't matter if used for contains())
     return matchingLocations;
   }
 
-  public void printActivityNumber(Integer totalNumber) {
+  private void printActivityNumber(Integer totalNumber) {
     switch (totalNumber) {
       case 0: // zero activities found
         MessageCli.ACTIVITIES_FOUND.printMessage("are", "no", "ies", ".");
@@ -50,9 +50,10 @@ public class OperatorManagementSystem {
     }
   }
 
-  public void addReviewToActivity(Map<String, String> reviewDetails,
+  private void addReviewToActivity(Map<String, String> reviewDetails,
                                   String activityId,
                                   ReviewType reviewType) {
+    // checks all operators for particular activity id, adding review if found
     for (Operator operator : operatorList) {
       Activity foundActivity = operator.findActivity(activityId);
       if (foundActivity != null) {
@@ -60,11 +61,12 @@ public class OperatorManagementSystem {
         return;
       }
     }
-    // if id matches nothing
+    // if id matches nothing, relevant error message
     MessageCli.REVIEW_NOT_ADDED_INVALID_ACTIVITY_ID.printMessage(activityId);
   }
 
-  public Review getReviewById(String reviewId) {
+  private Review getReviewById(String reviewId) {
+    // applies getReviewById to all operators until successful (i.e not null returned)
     for (Operator operator : operatorList) {
       Review foundReview = operator.getReviewById(reviewId);
       if (foundReview != null) {
@@ -94,6 +96,7 @@ public class OperatorManagementSystem {
       }
     }
 
+    // quantity message based on number of found operators
     if (filteredOperators.isEmpty()) { // no operators found
       MessageCli.OPERATORS_FOUND.printMessage("are",
           "no", "s", ".");
@@ -118,7 +121,6 @@ public class OperatorManagementSystem {
     operatorName = operatorName.trim();
     operatorName = operatorName.replaceAll("\\s{2,}", " ");
     location = location.trim();
-
 
     // names less than 3 characters are invalid.
     if (operatorName.length() < 3) {
