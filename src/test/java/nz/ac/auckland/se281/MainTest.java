@@ -32,6 +32,7 @@ import static nz.ac.auckland.se281.Main.Command.VIEW_ACTIVITIES;
   MainTest.Task2.class,
   MainTest.Task3.class,
   MainTest.YourTests.class,
+  MainTest.CustomTask2.class,
   MainTest.OthersTests.class
 })
 public class MainTest {
@@ -1562,7 +1563,7 @@ public class MainTest {
           CREATE_27_ACTIVITIES,
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
           CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-003'",
-          SEARCH_ACTIVITIES, "'fo'",
+          SEARCH_ACTIVITIES, "'Fo'",
           EXIT));
 
       assertContains("There are 11 matching activities found:");
@@ -1590,6 +1591,48 @@ public class MainTest {
           "  * The Activity For The Generic Operator: [SGO-TRG-003-001/Food] offered by Some Generic Operator");
 
       assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There is", true);
+    }
+
+    @Test
+    public void T2_C20_search_activities_location_substring() throws Exception {
+      // testing SEARCH_ACTIVITIES works for substring of activity type
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-003'",
+          SEARCH_ACTIVITIES, "'Taur'",
+          EXIT));
+
+      assertContains("There are 4 matching activities found:");
+      assertContains(
+          "  * Legends of the Lost Snow: [MMSR-TRG-001-001/Culture] offered by Mount Maunganui Ski Resort");
+      assertContains(
+          "  * Nemos Playground: [SSB-TRG-002-001/Wildlife] offered by Shark Snorkel Bay");
+      assertContains(
+          "  * Seaside Mussel Munch: [SSB-TRG-002-002/Food] offered by Shark Snorkel Bay");
+      assertContains(
+          "  * The Activity For The Generic Operator: [SGO-TRG-003-001/Food] offered by Some Generic Operator");
+      
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There is", true);
+    }
+
+    @Test
+    public void T2_C21_search_activities_operator_name() throws Exception {
+      // testing SEARCH_ACTIVITIES works as expected for operator name
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-003'",
+          SEARCH_ACTIVITIES, "'Some Generic Operator'",
+          EXIT));
+
+      assertContains("There are no matching activities found.");
+      
+      assertDoesNotContain("  * ", true);
       assertDoesNotContain("There is", true);
     }
   }
