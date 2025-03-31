@@ -1189,6 +1189,61 @@ public class MainTest {
       assertDoesNotContain("Activity not created:", true);
       assertDoesNotContain("There are", true);
     }
+
+    @Test
+    public void T2_C02_view_2_activities() throws Exception {
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
+          CREATE_ACTIVITY, "'A Second Activity'", "'Culture'", "'SGO-TRG-001'",
+          VIEW_ACTIVITIES, "'SGO-TRG-001'",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("There are 2 matching activities found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+          assertContains(
+            "* A Second Activity: [SGO-TRG-001-002/Culture] offered by Some Generic Operator");
+      
+      // creation should be successful, plurality addressed
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There is", true);
+    }
+
+    @Test
+    public void T2_C03_view_more_activities() throws Exception {
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
+          CREATE_ACTIVITY, "'A Second Activity'", "'Culture'", "'SGO-TRG-001'",
+          CREATE_ACTIVITY, "'A Third Activity'", "'Adventure'", "'SGO-TRG-001'",
+          CREATE_ACTIVITY, "'A Fourth Activity'", "'Food'", "'SGO-TRG-001'",
+          CREATE_ACTIVITY, "'A Fifth Activity'", "'Wildlife'", "'SGO-TRG-001'",
+          CREATE_ACTIVITY, "'Another Activity'", "'Other'", "'SGO-TRG-001'",
+          VIEW_ACTIVITIES, "'SGO-TRG-001'",
+          EXIT);
+
+      // expected output
+      assertContains("There are 6 matching activities found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+      assertContains(
+          "* A Second Activity: [SGO-TRG-001-002/Culture] offered by Some Generic Operator");
+      assertContains(
+          "* A Third Activity: [SGO-TRG-001-003/Adventure] offered by Some Generic Operator");
+      assertContains(
+          "* A Fourth Activity: [SGO-TRG-001-004/Food] offered by Some Generic Operator");
+      assertContains(
+          "* A Fifth Activity: [SGO-TRG-001-005/Wildlife] offered by Some Generic Operator");
+      assertContains(
+          "* Another Activity: [SGO-TRG-001-006/Other] offered by Some Generic Operator");
+
+      
+      // creation should be successful, plurality addressed
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There is", true);
+    }
   }
 
   @FixMethodOrder(MethodSorters.NAME_ASCENDING)
