@@ -1383,22 +1383,214 @@ public class MainTest {
     @Test
     public void T2_C11_view_activity_whitespace_char_min() throws Exception {
       // testing VIEW_ACTIVITIES only outputs its own activities.
-      runCommands(
+      runCommands(unpack(
           CREATE_14_OPERATORS,
           CREATE_27_ACTIVITIES,
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
-          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
-          VIEW_ACTIVITIES, "'SGO-TRG-001'",
-          EXIT);
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-003'",
+          VIEW_ACTIVITIES, "'SGO-TRG-003'",
+          EXIT));
 
       // in relation to expected output
       assertContains("There is 1 matching activity found:");
       assertContains(
-          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+          "* The Activity For The Generic Operator: [SGO-TRG-003-001/Food] offered by Some Generic Operator");
       
       // creation should be successful, plurality addressed
       assertDoesNotContain("Activity not created:", true);
       assertDoesNotContain("There are", true);
+    }
+
+    @Test
+    public void T2_C12_search_activities_english_location() throws Exception {
+      // testing SEARCH_ACTIVITIES works for searching an english location
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          SEARCH_ACTIVITIES, "Nelson",
+          EXIT));
+
+      assertContains("There are 2 matching activities found:");
+      assertContains(
+          "* Stars or Spaceships?: [NUW-NSN-001-001/Scenic] offered by Nelson UFO Watching");
+      assertContains(
+          "* Meteorites & Meat Pies: [NUW-NSN-001-002/Food] offered by Nelson UFO Watching");
+      assertDoesNotContain("zero", true);
+      assertDoesNotContain("There is 1", true);
+    }
+
+    @Test
+    public void T2_C13_search_activities_abbrev_location() throws Exception {
+      // testing SEARCH_ACTIVITIES works for searching an abbreviated location
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          SEARCH_ACTIVITIES, "NSN",
+          EXIT));
+
+      assertContains("There are 2 matching activities found:");
+      assertContains(
+          "* Stars or Spaceships?: [NUW-NSN-001-001/Scenic] offered by Nelson UFO Watching");
+      assertContains(
+          "* Meteorites & Meat Pies: [NUW-NSN-001-002/Food] offered by Nelson UFO Watching");
+      assertDoesNotContain("zero", true);
+      assertDoesNotContain("There is 1", true);
+    }
+
+    @Test
+    public void T2_C14_search_activities_whitespace() throws Exception {
+      // testing SEARCH_ACTIVITIES works when arguments have surrounding whitespace
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'         The Activity For The Generic Operator          '", "'       Food       '", "'       SGO-TRG-001    '",
+          SEARCH_ACTIVITIES, "'Activity'",
+          EXIT);
+
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+      
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There are", true);
+    }
+
+    @Test
+    public void T2_C15_search_activities_whitespace() throws Exception {
+      // testing SEARCH_ACTIVITIES works when keyword has surrounding whitespace
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
+          SEARCH_ACTIVITIES, "'        Activity         '",
+          EXIT);
+
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+      
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There are", true);
+    }
+
+    @Test
+    public void T2_C16_search_activities_name_insensitive() throws Exception {
+      // testing SEARCH_ACTIVITIES accepts case-insensitive activity names
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-003'",
+          SEARCH_ACTIVITIES, "'the activity for the generic operator'",
+          EXIT));
+
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-003-001/Food] offered by Some Generic Operator");
+      
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There are", true);
+    }
+
+    @Test
+    public void T2_C17_search_activities_type_insensitive() throws Exception {
+      // testing SEARCH_ACTIVITIES accepts case-insensitive activity types
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-003'",
+          SEARCH_ACTIVITIES, "'food'",
+          EXIT));
+
+      assertContains("There are 11 matching activities found:");
+      assertContains(
+          "  * Flaming Feast: [VBJ-AKL-002-001/Food] offered by Volcano Bungee Jump");
+      assertContains(
+          "  * Whale and Chips: [MWWW-HLZ-001-002/Food] offered by Mystical Waikato Whale Watching");
+      assertContains(
+          "  * The Gandalf Picnic: [HST-HLZ-002-002/Food] offered by Hobbiton Skydiving Tours");
+      assertContains(
+          "  * Seaside Mussel Munch: [SSB-TRG-002-002/Food] offered by Shark Snorkel Bay");
+      assertContains(
+          "  * Waterfall Wine Tasting: [HFBR-TUO-001-001/Food] offered by Huka Falls Barrel Rides");
+      assertContains(
+          "  * Unidentified Frying Objects: [TUW-TUO-002-001/Food] offered by Taupo UFO Watching");
+      assertContains(
+          "  * Meteorites & Meat Pies: [NUW-NSN-001-002/Food] offered by Nelson UFO Watching");
+      assertContains(
+          "  * Wild Desert Desserts: [CCT-CHC-001-001/Food] offered by Christchurch Camel Treks");
+      assertContains(
+          "  * Rapid Riverside Ramen: [ARWR-CHC-002-001/Food] offered by Avon River Whitewater Rafting");
+      assertContains(
+          "  * Penguin Pies: [DPP-DUD-001-001/Food] offered by Dunedin Penguin Parade");
+      assertContains(
+          "  * The Activity For The Generic Operator: [SGO-TRG-003-001/Food] offered by Some Generic Operator");
+
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There is", true);
+    }
+
+    @Test
+    public void T2_C18_search_activities_location_insensitive() throws Exception {
+      // testing SEARCH_ACTIVITIES accepts case-insensitive location names
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-003'",
+          SEARCH_ACTIVITIES, "'tAURANGA'",
+          EXIT));
+
+      assertContains("There are 4 matching activities found:");
+      assertContains(
+          "  * Legends of the Lost Snow: [MMSR-TRG-001-001/Culture] offered by Mount Maunganui Ski Resort");
+      assertContains(
+          "  * Nemos Playground: [SSB-TRG-002-001/Wildlife] offered by Shark Snorkel Bay");
+      assertContains(
+          "  * Seaside Mussel Munch: [SSB-TRG-002-002/Food] offered by Shark Snorkel Bay");
+      assertContains(
+          "  * The Activity For The Generic Operator: [SGO-TRG-003-001/Food] offered by Some Generic Operator");
+      
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There is", true);
+    }
+
+    @Test
+    public void T2_C19_search_activities_activity_type_substring() throws Exception {
+      // testing SEARCH_ACTIVITIES works for substring of activity type
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-003'",
+          SEARCH_ACTIVITIES, "'fo'",
+          EXIT));
+
+      assertContains("There are 11 matching activities found:");
+      assertContains(
+          "  * Flaming Feast: [VBJ-AKL-002-001/Food] offered by Volcano Bungee Jump");
+      assertContains(
+          "  * Whale and Chips: [MWWW-HLZ-001-002/Food] offered by Mystical Waikato Whale Watching");
+      assertContains(
+          "  * The Gandalf Picnic: [HST-HLZ-002-002/Food] offered by Hobbiton Skydiving Tours");
+      assertContains(
+          "  * Seaside Mussel Munch: [SSB-TRG-002-002/Food] offered by Shark Snorkel Bay");
+      assertContains(
+          "  * Waterfall Wine Tasting: [HFBR-TUO-001-001/Food] offered by Huka Falls Barrel Rides");
+      assertContains(
+          "  * Unidentified Frying Objects: [TUW-TUO-002-001/Food] offered by Taupo UFO Watching");
+      assertContains(
+          "  * Meteorites & Meat Pies: [NUW-NSN-001-002/Food] offered by Nelson UFO Watching");
+      assertContains(
+          "  * Wild Desert Desserts: [CCT-CHC-001-001/Food] offered by Christchurch Camel Treks");
+      assertContains(
+          "  * Rapid Riverside Ramen: [ARWR-CHC-002-001/Food] offered by Avon River Whitewater Rafting");
+      assertContains(
+          "  * Penguin Pies: [DPP-DUD-001-001/Food] offered by Dunedin Penguin Parade");
+      assertContains(
+          "  * The Activity For The Generic Operator: [SGO-TRG-003-001/Food] offered by Some Generic Operator");
+
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There is", true);
     }
   }
 
