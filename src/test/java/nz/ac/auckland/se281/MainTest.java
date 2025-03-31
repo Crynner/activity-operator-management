@@ -1,16 +1,30 @@
 package nz.ac.auckland.se281;
 
-import static nz.ac.auckland.se281.Main.Command.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
+import static nz.ac.auckland.se281.Main.Command.ADD_EXPERT_REVIEW;
+import static nz.ac.auckland.se281.Main.Command.ADD_PRIVATE_REVIEW;
+import static nz.ac.auckland.se281.Main.Command.ADD_PUBLIC_REVIEW;
+import static nz.ac.auckland.se281.Main.Command.CREATE_ACTIVITY;
+import static nz.ac.auckland.se281.Main.Command.CREATE_OPERATOR;
+import static nz.ac.auckland.se281.Main.Command.DISPLAY_REVIEWS;
+import static nz.ac.auckland.se281.Main.Command.DISPLAY_TOP_ACTIVITIES;
+import static nz.ac.auckland.se281.Main.Command.ENDORSE_REVIEW;
+import static nz.ac.auckland.se281.Main.Command.EXIT;
+import static nz.ac.auckland.se281.Main.Command.RESOLVE_REVIEW;
+import static nz.ac.auckland.se281.Main.Command.SEARCH_ACTIVITIES;
+import static nz.ac.auckland.se281.Main.Command.SEARCH_OPERATORS;
+import static nz.ac.auckland.se281.Main.Command.UPLOAD_REVIEW_IMAGE;
+import static nz.ac.auckland.se281.Main.Command.VIEW_ACTIVITIES;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -1145,6 +1159,35 @@ public class MainTest {
       );
       
       assertContains("(UA-AKL-001-001-R1)");
+    }
+  }
+
+  @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+  public static class CustomTask2 extends CliTest {
+
+    public CustomTask2() {
+      super(Main.class);
+    }
+
+    @Override
+    public void reset() {}
+
+    @Test
+    public void T2_C01_view_single_activity() throws Exception {
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
+          VIEW_ACTIVITIES, "'SGO-TRG-001'",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+      
+      // creation should be successful, plurality addressed
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There are", true);
     }
   }
 
