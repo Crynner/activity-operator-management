@@ -1174,6 +1174,7 @@ public class MainTest {
 
     @Test
     public void T2_C01_view_single_activity() throws Exception {
+      // testing VIEW_ACTIVITIES works for a single activity within an operator.
       runCommands(
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
           CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
@@ -1192,6 +1193,7 @@ public class MainTest {
 
     @Test
     public void T2_C02_view_2_activities() throws Exception {
+      // testing VIEW_ACTIVITIES works for 2 activities within an operator.
       runCommands(
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
           CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
@@ -1213,6 +1215,8 @@ public class MainTest {
 
     @Test
     public void T2_C03_view_more_activities() throws Exception {
+      // testing VIEW_ACTIVITIES works for more than 2 activities within an operator.
+      // indirectly also tests for all activity types correctly displayed.
       runCommands(
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
           CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
@@ -1243,6 +1247,66 @@ public class MainTest {
       // creation should be successful, plurality addressed
       assertDoesNotContain("Activity not created:", true);
       assertDoesNotContain("There is", true);
+    }
+
+    @Test
+    public void T2_C04_view_activity_case_insensitivity() throws Exception {
+      // testing VIEW_ACTIVITIES works a case-insensitive operator-id.
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
+          VIEW_ACTIVITIES, "'sgo-trg-001'",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("Operator not found:", true);
+      assertDoesNotContain("There are no operators found.", true);
+    }
+
+    @Test
+    public void T2_C05_view_activity_input_whitespace() throws Exception {
+      // testing VIEW_ACTIVITIES works with whitespace surrounding the actual input.
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
+          VIEW_ACTIVITIES, "'             SGO-TRG-001           '",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("Operator not found:", true);
+      assertDoesNotContain("There are no operators found.", true);
+    }
+
+    @Test
+    public void T2_C06_create_activity_insensitive_activity_type() throws Exception {
+      // testing VIEW_ACTIVITIES works with whitespace surrounding the actual input.
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'food'", "'SGO-TRG-001'",
+          CREATE_ACTIVITY, "'The 2nd Activity For The Generic Operator'", "'FOOD'", "'SGO-TRG-001'",
+          VIEW_ACTIVITIES, "'SGO-TRG-001'",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("There are 2 matching activities found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+      assertContains(
+          "* The 2nd Activity For The Generic Operator: [SGO-TRG-001-002/Food] offered by Some Generic Operator");
+  
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("Operator not found:", true);
+      assertDoesNotContain("There are no operators found.", true);
     }
   }
 
