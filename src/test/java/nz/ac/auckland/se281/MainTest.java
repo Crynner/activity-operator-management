@@ -1265,7 +1265,7 @@ public class MainTest {
 
       assertDoesNotContain("Activity not created:", true);
       assertDoesNotContain("Operator not found:", true);
-      assertDoesNotContain("There are no operators found.", true);
+      assertDoesNotContain("There are no activities found.", true);
     }
 
     @Test
@@ -1284,12 +1284,12 @@ public class MainTest {
 
       assertDoesNotContain("Activity not created:", true);
       assertDoesNotContain("Operator not found:", true);
-      assertDoesNotContain("There are no operators found.", true);
+      assertDoesNotContain("There are no activities found.", true);
     }
 
     @Test
     public void T2_C06_create_activity_insensitive_activity_type() throws Exception {
-      // testing VIEW_ACTIVITIES works with whitespace surrounding the actual input.
+      // testing CREATE_ACTIVITY works with a case-insensitive activity type.
       runCommands(
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
           CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'food'", "'SGO-TRG-001'",
@@ -1306,7 +1306,99 @@ public class MainTest {
   
       assertDoesNotContain("Activity not created:", true);
       assertDoesNotContain("Operator not found:", true);
-      assertDoesNotContain("There are no operators found.", true);
+      assertDoesNotContain("There are no activities found.", true);
+    }
+
+    @Test
+    public void T2_C07_create_activity_insensitive_operator_id() throws Exception {
+      // testing CREATE_ACTIVITY works with a case-insensitive operator-id.
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'food'", "'sgo-trg-001'",
+          VIEW_ACTIVITIES, "'SGO-TRG-001'",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+      
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("Operator not found:", true);
+      assertDoesNotContain("There are no activities found.", true);
+    }
+
+    @Test
+    public void T2_C08_create_activity_auto_other_type() throws Exception {
+      // testing CREATE_ACTIVITY converts unknown activity types to 'Other'.
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Tedium'", "'SGO-TRG-001'",
+          VIEW_ACTIVITIES, "'SGO-TRG-001'",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Other] offered by Some Generic Operator");
+      
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("Operator not found:", true);
+      assertDoesNotContain("There are no activities found.", true);
+    }
+
+    @Test
+    public void T2_C09_create_activity_whitespace() throws Exception {
+      // testing CREATE_ACTIVITY works with whitespace surrounding the actual inputs.
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'   The Activity For The Generic Operator'     ", "'          Food   '", "'  SGO-TRG-001        '",
+          VIEW_ACTIVITIES, "'SGO-TRG-001'",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+      
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("Operator not found:", true);
+      assertDoesNotContain("There are no activities found.", true);
+    }
+
+    @Test
+    public void T2_C10_create_activity_whitespace_char_min() throws Exception {
+      // testing CREATE_ACTIVITY correctly determines short activity names.
+      runCommands(
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'  Or   '", "'Food'", "'SGO-TRG-001'",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("Activity not created: 'Or' is not a valid activity name");
+      assertDoesNotContain("Successfully created activity", true);
+      assertDoesNotContain("Operator not found:", true);
+    }
+
+    @Test
+    public void T2_C11_view_activity_whitespace_char_min() throws Exception {
+      // testing VIEW_ACTIVITIES only outputs its own activities.
+      runCommands(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
+          CREATE_ACTIVITY, "'The Activity For The Generic Operator'", "'Food'", "'SGO-TRG-001'",
+          VIEW_ACTIVITIES, "'SGO-TRG-001'",
+          EXIT);
+
+      // in relation to expected output
+      assertContains("There is 1 matching activity found:");
+      assertContains(
+          "* The Activity For The Generic Operator: [SGO-TRG-001-001/Food] offered by Some Generic Operator");
+      
+      // creation should be successful, plurality addressed
+      assertDoesNotContain("Activity not created:", true);
+      assertDoesNotContain("There are", true);
     }
   }
 
