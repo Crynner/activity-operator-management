@@ -1662,6 +1662,64 @@ public class MainTest {
       assertDoesNotContain("  * ", true);
       assertDoesNotContain("There are no reviews for activity", true);
     }
+
+    @Test
+    public void T3_C02_display_reviews_non_plural() throws Exception {
+      // testing DISPLAY_REVIEWS correctly prints a singular review
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("There is 1 review for activity");
+      
+      assertDoesNotContain(" reviews for activity", true); // catches 0 and 2+
+    }
+
+    @Test
+    public void T3_C03_display_reviews_case_insensitive() throws Exception {
+      // testing DISPLAY_REVIEWS id input is case-insensitive
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          DISPLAY_REVIEWS, "'wact-akl-001-001'",
+          EXIT));
+
+      assertContains("There is 1 review for activity");
+      
+      assertDoesNotContain(" reviews for activity", true);
+      assertDoesNotContain("Activity not found: ", true);
+    }
+
+    @Test
+    public void T3_C04_display_reviews_multiple_reviews_same_activity() throws Exception {
+      // testing DISPLAY_REVIEWS correctly display multiple reviews for the same activity
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("Barcode", "n", "4", "Pretty cool!"),
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("Maxicode", "n", "3", "Kinda just meh."),
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("Aztec Code", "n", "2", "This sucked."),
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("There are 4 reviews for activity");
+      assertContains("  * [5/5] Public review (WACT-AKL-001-001-R1) by 'QR Code'");
+      assertContains("    \"T'was quite good!\" ");
+      assertContains("  * [4/5] Public review (WACT-AKL-001-001-R2) by 'Barcode'");
+      assertContains("    \"Pretty cool!\" ");
+      assertContains("  * [3/5] Public review (WACT-AKL-001-001-R3) by 'Maxicode'");
+      assertContains("    \"Kinda just meh.\" ");
+      assertContains("  * [2/5] Public review (WACT-AKL-001-001-R4) by 'Aztec Code'");
+      assertContains("    \"This sucked.\" ");
+      
+      assertDoesNotContain("Review not added:", true);
+      assertDoesNotContain("Activity not found: ", true);
+    }
   }
 
   @FixMethodOrder(MethodSorters.NAME_ASCENDING)
