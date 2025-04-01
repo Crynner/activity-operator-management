@@ -33,6 +33,7 @@ import static nz.ac.auckland.se281.Main.Command.VIEW_ACTIVITIES;
   MainTest.Task3.class,
   MainTest.YourTests.class,
   MainTest.CustomTask2.class,
+  MainTest.CustomTask3.class,
   MainTest.OthersTests.class
 })
 public class MainTest {
@@ -620,7 +621,7 @@ public class MainTest {
     }
 
     @Test
-    public void T3_xx_add_reviews_different_activities_correct_ids() throws Exception {
+    public void T3_06_add_reviews_different_activities_correct_ids() throws Exception {
       runCommands(
           unpack(
               CREATE_14_OPERATORS,
@@ -1174,7 +1175,7 @@ public class MainTest {
     public void reset() {}
 
     @Test
-    public void T2_C01_view_single_activity() throws Exception {
+    public void T2_C01_view_activities_single() throws Exception {
       // testing VIEW_ACTIVITIES works for a single activity within an operator.
       runCommands(
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
@@ -1193,7 +1194,7 @@ public class MainTest {
     }
 
     @Test
-    public void T2_C02_view_2_activities() throws Exception {
+    public void T2_C02_view_activities_2() throws Exception {
       // testing VIEW_ACTIVITIES works for 2 activities within an operator.
       runCommands(
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
@@ -1215,7 +1216,7 @@ public class MainTest {
     }
 
     @Test
-    public void T2_C03_view_more_activities() throws Exception {
+    public void T2_C03_view_activities_more() throws Exception {
       // testing VIEW_ACTIVITIES works for more than 2 activities within an operator.
       // indirectly also tests for all activity types correctly displayed.
       runCommands(
@@ -1251,7 +1252,7 @@ public class MainTest {
     }
 
     @Test
-    public void T2_C04_view_activity_case_insensitivity() throws Exception {
+    public void T2_C04_view_activities_case_insensitivity() throws Exception {
       // testing VIEW_ACTIVITIES works a case-insensitive operator-id.
       runCommands(
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
@@ -1270,7 +1271,7 @@ public class MainTest {
     }
 
     @Test
-    public void T2_C05_view_activity_input_whitespace() throws Exception {
+    public void T2_C05_view_activities_input_whitespace() throws Exception {
       // testing VIEW_ACTIVITIES works with whitespace surrounding the actual input.
       runCommands(
           CREATE_OPERATOR,"'Some Generic Operator'", "'TRG'",
@@ -1382,7 +1383,7 @@ public class MainTest {
     }
 
     @Test
-    public void T2_C11_view_activity_whitespace_char_min() throws Exception {
+    public void T2_C11_view_activities_whitespace_char_min() throws Exception {
       // testing VIEW_ACTIVITIES only outputs its own activities.
       runCommands(unpack(
           CREATE_14_OPERATORS,
@@ -1634,6 +1635,32 @@ public class MainTest {
       
       assertDoesNotContain("  * ", true);
       assertDoesNotContain("There is", true);
+    }
+  }
+
+  @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+  public static class CustomTask3 extends CliTest {
+
+    public CustomTask3() {
+      super(Main.class);
+    }
+
+    @Override
+    public void reset() {}
+
+    @Test
+    public void T3_C01_display_reviews_invalid_id() throws Exception {
+      // testing DISPLAY_REVIEWS correctly handles invalid ids
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          DISPLAY_REVIEWS, "'NONE-AKL-999'",
+          EXIT));
+
+      assertContains("Activity not found: 'NONE-AKL-999' is an invalid activity ID.");
+      
+      assertDoesNotContain("  * ", true);
+      assertDoesNotContain("There are no reviews for activity", true);
     }
   }
 
