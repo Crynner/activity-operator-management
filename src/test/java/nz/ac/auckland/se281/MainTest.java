@@ -1761,16 +1761,15 @@ public class MainTest {
       runCommands(unpack(
           CREATE_14_OPERATORS,
           CREATE_27_ACTIVITIES,
-          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "y", "5", "T'was quite good!"),
+          ADD_PUBLIC_REVIEW, "'   WACT-AKL-001-001   '", options("QR Code", "y", "5", "T'was quite good!"),
           DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
           EXIT));
 
-      assertContains("There is 1 review for activity");
-      assertContains("by 'Anonymous'");
-      
-      assertDoesNotContain(" reviews for activity", true);
-      assertDoesNotContain("Activity not found: ", true);
-      assertDoesNotContain("by 'QR Code'", true);
+      assertContains("Public review 'WACT-AKL-001-001-R1");
+      assertContains("added successfully for activity ");
+
+      assertDoesNotContain("Review not added: ", true);
+      assertDoesNotContain("is an invalid activity ID.", true);
     }
 
     @Test
@@ -1997,11 +1996,11 @@ public class MainTest {
           ADD_EXPERT_REVIEW, "'   WACT-AKL-001-001     '", options("QR Code", "5", "T'was quite good!", "y"),
           EXIT));
 
-          assertContains("Expert review 'WACT-AKL-001-001-R1");
-          assertContains("added successfully for activity ");
-    
-          assertDoesNotContain("Review not added: ", true);
-          assertDoesNotContain("is an invalid activity ID.", true);
+      assertContains("Expert review 'WACT-AKL-001-001-R1");
+      assertContains("added successfully for activity ");
+
+      assertDoesNotContain("Review not added: ", true);
+      assertDoesNotContain("is an invalid activity ID.", true);
     }
 
     @Test
@@ -2060,7 +2059,209 @@ public class MainTest {
       assertDoesNotContain("  * [999/5] Expert review (WACT-AKL-001-001-R1) by 'QR Code'", true);
     }
 
-    
+    @Test
+    public void T3_C24_all_reviews_consistent_id() throws Exception {
+      // testing different review types correctly increment review id for one activity
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          ADD_PRIVATE_REVIEW, "'WACT-AKL-001-001'", options("Barcode", "qr.code2025@something.com", "4", "Illegitimatism?", "n"),
+          ADD_EXPERT_REVIEW, "'WACT-AKL-001-001'", options("Maxicode", "3", "Kinda just meh.", "y"),
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("There are 3 reviews for activity");
+      assertContains("  * [5/5] Public review (WACT-AKL-001-001-R1) by 'QR Code'");
+      assertContains("    \"T'was quite good!\" ");
+      assertContains("  * [4/5] Private review (WACT-AKL-001-001-R2) by 'Barcode'");
+      assertContains("    \"Illegitimatism?\" ");
+      assertContains("  * [3/5] Expert review (WACT-AKL-001-001-R3) by 'Maxicode'");
+      assertContains("    \"Kinda just meh.\" ");
+
+      assertDoesNotContain("Review not added: ", true);
+      assertDoesNotContain("is an invalid activity ID.", true);
+      assertDoesNotContain("  * [4/5] Private review (WACT-AKL-001-001-R1) by 'Barcode'", true);
+      assertDoesNotContain("  * [3/5] Expert review (WACT-AKL-001-001-R1) by 'Maxicode'", true);
+    }
+
+    @Test
+    public void T3_C25_endorse_review_invalid_id() throws Exception {
+      // testing ENDORSE_REVIEW handles invalid review id
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ENDORSE_REVIEW, "'WACT-AKL-001-001-R1'",
+          EXIT));
+
+      assertContains("Review not found:");
+
+      assertDoesNotContain("endorsed successfully.", true);
+    }
+
+    @Test
+    public void T3_C26_endorse_review_invalid_review_type() throws Exception {
+      // testing ENDORSE_REVIEW handles wrong review type
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PRIVATE_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "qr.code2025@something.com", "5", "Illegitimatism?", "y"),
+          ENDORSE_REVIEW, "'WACT-AKL-001-001-R1'",
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("Review not endorsed: 'WACT-AKL-001-001-R1' is not a public review.");
+
+      assertDoesNotContain("Review not found:", true);
+      assertDoesNotContain("endorsed successfully.", true);
+      assertDoesNotContain("Endorsed by admin.", true);
+    }
+
+    @Test
+    public void T3_C27_endorse_review_whitespace() throws Exception {
+      // testing ENDORSE_REVIEW handles surrounding whitespace
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          ENDORSE_REVIEW, "'             WACT-AKL-001-001-R1               '",
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("endorsed successfully.");
+      assertContains("Endorsed by admin.");
+
+      assertDoesNotContain("Review not found:", true);
+      assertDoesNotContain(" is not a public review.", true);
+    }
+
+    @Test
+    public void T3_C28_endorse_review_case_insensitive() throws Exception {
+      // testing ENDORSE_REVIEW handles case-insensitivity
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          ENDORSE_REVIEW, "'wact-akl-001-001-r1'",
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("endorsed successfully.");
+      assertContains("Endorsed by admin.");
+
+      assertDoesNotContain("Review not found:", true);
+      assertDoesNotContain(" is not a public review.", true);
+    }
+
+    @Test
+    public void T3_C29_resolve_review_invalid_review_type() throws Exception {
+      // testing RESOLVE_REVIEW handles wrong review type
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          RESOLVE_REVIEW, "'WACT-AKL-001-001-R1'", "'Poacher.'",
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("Review not resolved: 'WACT-AKL-001-001-R1' is not a private review.");
+      assertContains("Public review 'WACT-AKL-001-001-R1");
+
+      assertDoesNotContain("Review not found:", true);
+      assertDoesNotContain("resolved successfully.", true);
+      assertDoesNotContain("Resolved: \"Poacher.\"", true);
+    }
+
+    @Test
+    public void T3_C30_resolve_review_whitespace() throws Exception {
+      // testing RESOLVE_REVIEW handles surrounding whitespace
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PRIVATE_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "qr.code2025@something.com", "5", "Illegitimatism?", "y"),
+          RESOLVE_REVIEW, "'             WACT-AKL-001-001-R1               '", "'Poacher.'",
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("resolved successfully.");
+      assertContains("Resolved: \"Poacher.\"");
+
+      assertDoesNotContain("Review not found:", true);
+      assertDoesNotContain(" is not a private review.", true);
+    }
+
+    @Test
+    public void T3_C31_resolve_review_case_insensitive() throws Exception {
+      // testing RESOLVE_REVIEW handles case-insensitivity
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PRIVATE_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "qr.code2025@something.com", "5", "Illegitimatism?", "y"),
+          RESOLVE_REVIEW, "'wact-akl-001-001-r1'", "'Poacher.'",
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("resolved successfully.");
+      assertContains("Resolved: \"Poacher.\"");
+
+      assertDoesNotContain("Review not found:", true);
+      assertDoesNotContain(" is not a private review.", true);
+    }
+
+    @Test
+    public void T3_C32_add_image_invalid_review_type() throws Exception {
+      // testing UPLOAD_REVIEW_IMAGE handles wrong review type
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          UPLOAD_REVIEW_IMAGE, "'WACT-AKL-001-001-R1'", "hunger.png",
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("Image not uploaded: 'WACT-AKL-001-001-R1' is not an expert review.");
+      assertContains("Public review 'WACT-AKL-001-001-R1");
+
+      assertDoesNotContain("Review not found:", true);
+      assertDoesNotContain("uploaded successfully", true);
+      assertDoesNotContain("Images: [hunger.png]", true);
+    }
+
+    @Test
+    public void T3_C33_add_image_review_whitespace() throws Exception {
+      // testing UPLOAD_REVIEW_IMAGE handles surrounding whitespace
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_EXPERT_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "5", "T'was quite good!", "y"),
+          UPLOAD_REVIEW_IMAGE, "'     WACT-AKL-001-001-R1     '", "hunger.png",
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("uploaded successfully");
+      assertContains("Images: [hunger.png]");
+
+      assertDoesNotContain("Review not found:", true);
+      assertDoesNotContain(" is not an expert review.", true);
+    }
+
+    @Test
+    public void T3_C34_add_image_case_insensitive() throws Exception {
+      // testing UPLOAD_REVIEW_IMAGE handles case-insensitivity
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_EXPERT_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "5", "T'was quite good!", "y"),
+          UPLOAD_REVIEW_IMAGE, "'wact-akl-001-001-r1'", "hunger.png",
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("uploaded successfully for review 'WACT-AKL-001-001-R1'.");
+      assertContains("Images: [hunger.png]");
+
+      assertDoesNotContain("Review not found:", true);
+      assertDoesNotContain(" is not an expert review.", true);
+    }
   }
 
   @FixMethodOrder(MethodSorters.NAME_ASCENDING)
