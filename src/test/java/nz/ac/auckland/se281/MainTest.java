@@ -2066,7 +2066,7 @@ public class MainTest {
           CREATE_14_OPERATORS,
           CREATE_27_ACTIVITIES,
           ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
-          ADD_PRIVATE_REVIEW, "'WACT-AKL-001-001'", options("Barcode", "qr.code2025@something.com", "4", "Illegitimatism?", "n"),
+          ADD_PRIVATE_REVIEW, "'WACT-AKL-001-001'", options("Barcode", "bar.code2029@something.com", "4", "Illegitimatism?", "n"),
           ADD_EXPERT_REVIEW, "'WACT-AKL-001-001'", options("Maxicode", "3", "Kinda just meh.", "y"),
           DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
           EXIT));
@@ -2128,7 +2128,7 @@ public class MainTest {
           DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
           EXIT));
 
-      assertContains("endorsed successfully.");
+      assertContains("Review 'WACT-AKL-001-001-R1' endorsed successfully.");
       assertContains("Endorsed by admin.");
 
       assertDoesNotContain("Review not found:", true);
@@ -2146,7 +2146,7 @@ public class MainTest {
           DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
           EXIT));
 
-      assertContains("endorsed successfully.");
+      assertContains("Review 'WACT-AKL-001-001-R1' endorsed successfully.");
       assertContains("Endorsed by admin.");
 
       assertDoesNotContain("Review not found:", true);
@@ -2183,7 +2183,7 @@ public class MainTest {
           DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
           EXIT));
 
-      assertContains("resolved successfully.");
+      assertContains("Review 'WACT-AKL-001-001-R1' resolved successfully.");
       assertContains("Resolved: \"Poacher.\"");
 
       assertDoesNotContain("Review not found:", true);
@@ -2201,7 +2201,7 @@ public class MainTest {
           DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
           EXIT));
 
-      assertContains("resolved successfully.");
+      assertContains("Review 'WACT-AKL-001-001-R1' resolved successfully.");
       assertContains("Resolved: \"Poacher.\"");
 
       assertDoesNotContain("Review not found:", true);
@@ -2238,7 +2238,7 @@ public class MainTest {
           DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
           EXIT));
 
-      assertContains("uploaded successfully");
+      assertContains("uploaded successfully for review 'WACT-AKL-001-001-R1'.");
       assertContains("Images: [hunger.png]");
 
       assertDoesNotContain("Review not found:", true);
@@ -2261,6 +2261,118 @@ public class MainTest {
 
       assertDoesNotContain("Review not found:", true);
       assertDoesNotContain(" is not an expert review.", true);
+    }
+
+    @Test
+    public void T3_C35_top_activities_average_calc() throws Exception {
+      // testing activity review averages match expected for non-integer result
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("Barcode", "n", "2", "Pretty Cool!"),
+          ADD_EXPERT_REVIEW, "'WACT-AKL-001-001'", options("Maxicode", "3", "Kinda just meh.", "y"),
+          DISPLAY_TOP_ACTIVITIES,
+          EXIT));
+
+      assertContains("'Bethells Beach Camel Trek', with an average rating of 3.3");
+
+      assertDoesNotContain("'Bethells Beach Camel Trek', with an average rating of 3.0", true);
+      assertDoesNotContain("'Bethells Beach Camel Trek', with an average rating of 4.0", true);
+    }
+
+    @Test
+    public void T3_C36_top_activities_skip_private_average() throws Exception {
+      // testing activity review averages skip private reviews in calculation
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          ADD_PRIVATE_REVIEW, "'WACT-AKL-001-001'", options("Barcode", "bar.code2029@something.com", "1", "Illegitimatism?", "y"),
+          ADD_EXPERT_REVIEW, "'WACT-AKL-001-001'", options("Maxicode", "3", "Kinda just meh.", "y"),
+          DISPLAY_TOP_ACTIVITIES,
+          EXIT));
+
+      assertContains("'Bethells Beach Camel Trek', with an average rating of 4.0");
+
+      assertDoesNotContain("'Bethells Beach Camel Trek', with an average rating of 2.6", true);
+      assertDoesNotContain("'Bethells Beach Camel Trek', with an average rating of 2.7", true);
+      assertDoesNotContain("'Bethells Beach Camel Trek', with an average rating of 3.0", true);
+    }
+
+    @Test
+    public void T3_C37_top_activities_skip_private_display() throws Exception {
+      // testing DISPLAY_TOP_ACTIVITIES skip private reviews in displaying top activities
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PRIVATE_REVIEW, "'WACT-AKL-001-001'", options("Barcode", "bar.code2029@something.com", "1", "Illegitimatism?", "y"),
+          DISPLAY_TOP_ACTIVITIES,
+          EXIT));
+
+      assertContains("No reviewed activities found in Auckland | Tāmaki Makaurau");
+
+      assertDoesNotContain("with an average rating of", true);
+    }
+
+    @Test
+    public void T3_C38_top_activities_multiple_locations_single_review() throws Exception {
+      // testing DISPLAY_TOP_ACTIVITIES correctly allocates reviews for locations
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("Wisper", "n", "5", "..."),
+          ADD_PUBLIC_REVIEW, "'MMSR-TRG-001-001'", options("Hämis", "n", "2", "<>"),
+          ADD_EXPERT_REVIEW, "'MWWW-HLZ-001-001'", options("Corsola", "3", "^^^", "y"),
+          ADD_PUBLIC_REVIEW, "'HFBR-TUO-001-001'", options("Leshy", "n", "4", "vvv"),
+          ADD_PUBLIC_REVIEW, "'PBJ-WLG-001-001'", options("Solael", "n", "1", "!!!"),
+          ADD_PUBLIC_REVIEW, "'NUW-NSN-001-001'", options("Azar", "n", "3", "N/A"),
+          ADD_PUBLIC_REVIEW, "'ARWR-CHC-002-001'", options("Cadence", "n", "5", "---"),
+          ADD_PUBLIC_REVIEW, "'DPP-DUD-001-002'", options("Lucky", "n", "3", "///"),
+          DISPLAY_TOP_ACTIVITIES,
+          EXIT));
+
+      assertContains("Top reviewed activity in Auckland | Tāmaki Makaurau is 'Bethells Beach Camel Trek', with an average rating of 5.0");
+      assertContains("Top reviewed activity in Hamilton | Kirikiriroa is 'Whale and Dolphin Safari', with an average rating of 3.0");
+      assertContains("Top reviewed activity in Tauranga is 'Legends of the Lost Snow', with an average rating of 2.0");
+      assertContains("Top reviewed activity in Taupo | Taupō-nui-a-Tia is 'Waterfall Wine Tasting', with an average rating of 4.0");
+      assertContains("Top reviewed activity in Wellington | Te Whanganui-a-Tara is 'Jumping Through Political Loopholes', with an average rating of 1.0");
+      assertContains("Top reviewed activity in Nelson | Whakatu is 'Stars or Spaceships?', with an average rating of 3.0");
+      assertContains("Top reviewed activity in Christchurch | Ōtautahi is 'Rapid Riverside Ramen', with an average rating of 5.0");
+      assertContains("Top reviewed activity in Dunedin | Ōtepoti is 'Waddling Wonders', with an average rating of 3.0");
+
+
+      assertDoesNotContain("No reviewed activities found", true);
+    }
+
+    @Test
+    public void T3_C39_top_activities_multiple_locations_single_review() throws Exception {
+      // testing DISPLAY_TOP_ACTIVITIES correctly allocates reviews for locations
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("Wisper", "n", "5", "..."),
+          ADD_PUBLIC_REVIEW, "'MMSR-TRG-001-001'", options("Hämis", "n", "2", ">>>"),
+          ADD_EXPERT_REVIEW, "'MWWW-HLZ-001-001'", options("Corsola", "3", "^^^", "y"),
+          ADD_PUBLIC_REVIEW, "'HFBR-TUO-001-001'", options("Leshy", "n", "4", "vvv"),
+          ADD_PUBLIC_REVIEW, "'PBJ-WLG-001-001'", options("Solael", "n", "1", "!!!"),
+          ADD_PUBLIC_REVIEW, "'NUW-NSN-001-001'", options("Azar", "n", "3", "N/A"),
+          ADD_PUBLIC_REVIEW, "'ARWR-CHC-002-001'", options("Cadence", "n", "5", "---"),
+          ADD_PUBLIC_REVIEW, "'DPP-DUD-001-002'", options("Lucky", "n", "3", "///"),
+          DISPLAY_TOP_ACTIVITIES,
+          EXIT));
+
+      assertContains("Top reviewed activity in Auckland | Tāmaki Makaurau is 'Bethells Beach Camel Trek', with an average rating of 5.0");
+      assertContains("Top reviewed activity in Hamilton | Kirikiriroa is 'Whale and Dolphin Safari', with an average rating of 3.0");
+      assertContains("Top reviewed activity in Tauranga is 'Legends of the Lost Snow', with an average rating of 2.0");
+      assertContains("Top reviewed activity in Taupo | Taupō-nui-a-Tia is 'Waterfall Wine Tasting', with an average rating of 4.0");
+      assertContains("Top reviewed activity in Wellington | Te Whanganui-a-Tara is 'Jumping Through Political Loopholes', with an average rating of 1.0");
+      assertContains("Top reviewed activity in Nelson | Whakatu is 'Stars or Spaceships?', with an average rating of 3.0");
+      assertContains("Top reviewed activity in Christchurch | Ōtautahi is 'Rapid Riverside Ramen', with an average rating of 5.0");
+      assertContains("Top reviewed activity in Dunedin | Ōtepoti is 'Waddling Wonders', with an average rating of 3.0");
+
+
+      assertDoesNotContain("No reviewed activities found", true);
     }
   }
 

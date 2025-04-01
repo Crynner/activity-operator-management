@@ -283,7 +283,7 @@ public class OperatorManagementSystem {
   }
 
   public void endorseReview(String reviewId) {
-    reviewId = reviewId.trim();
+    reviewId = reviewId.trim().toUpperCase();
 
     Review reviewToEndorse = getReviewById(reviewId);
     if (reviewToEndorse == null) {
@@ -300,7 +300,7 @@ public class OperatorManagementSystem {
   }
 
   public void resolveReview(String reviewId, String response) {
-    reviewId = reviewId.trim();
+    reviewId = reviewId.trim().toUpperCase();
     response = response.trim();
 
     Review reviewToResolve = getReviewById(reviewId);
@@ -317,7 +317,7 @@ public class OperatorManagementSystem {
   }
 
   public void uploadReviewImage(String reviewId, String imageName) {
-    reviewId = reviewId.trim();
+    reviewId = reviewId.trim().toUpperCase();
     imageName = imageName.trim();
 
     Review reviewForImage = getReviewById(reviewId);
