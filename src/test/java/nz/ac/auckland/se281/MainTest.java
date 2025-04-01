@@ -17,8 +17,8 @@ import static nz.ac.auckland.se281.Main.Command.*;
   MainTest.Task2.class,
   MainTest.Task3.class,
   MainTest.YourTests.class,
-  // MainTest.CustomTask2.class,
-  // MainTest.CustomTask3.class,
+  MainTest.CustomTask2.class,
+  MainTest.CustomTask3.class,
   MainTest.OthersTests.class
 })
 public class MainTest {
@@ -31,7 +31,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_zero_operators() throws Exception {
+      public void T1_01_zero_operators() throws Exception {
           runCommands(SEARCH_OPERATORS, "*", EXIT);
 
           assertContains("There are no matching operators found.");
@@ -39,7 +39,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_name() throws Exception {
+      public void T1_02_create_operator_name() throws Exception {
           runCommands(
               CREATE_OPERATOR,
               "'West Auckland Camel Treks'",
@@ -56,7 +56,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_location() throws Exception {
+      public void T1_03_create_operator_location() throws Exception {
           runCommands(
               CREATE_OPERATOR,
               "'West Auckland Camel Treks'",
@@ -74,7 +74,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_id_part_name() throws Exception {
+      public void T1_04_create_operator_id_part_name() throws Exception {
           runCommands(
               CREATE_OPERATOR,
               "'West Auckland Camel Treks'",
@@ -93,7 +93,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_id_full() throws Exception {
+      public void T1_05_create_operator_id_full() throws Exception {
           runCommands(
               CREATE_OPERATOR,
               "'West Auckland Camel Treks'",
@@ -111,7 +111,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_name_too_short() throws Exception {
+      public void T1_06_create_operator_name_too_short() throws Exception {
           runCommands(CREATE_OPERATOR, "'Yo'", "'AKL'", EXIT);
 
           assertContains(
@@ -123,7 +123,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_invalid_location() throws Exception {
+      public void T1_07_create_operator_invalid_location() throws Exception {
           runCommands(
               CREATE_OPERATOR,
               "'West Auckland Camel Treks'",
@@ -141,7 +141,7 @@ public class MainTest {
 
       // specify location in full name
       @Test
-      public void T1_xx_create_operator_valid_location_full_name_english()
+      public void T1_08_create_operator_valid_location_full_name_english()
           throws Exception {
           runCommands(
               CREATE_OPERATOR,
@@ -160,7 +160,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_valid_location_full_name_teo_reo()
+      public void T1_09_create_operator_valid_location_full_name_teo_reo()
           throws Exception {
           runCommands(
               CREATE_OPERATOR,
@@ -180,7 +180,7 @@ public class MainTest {
 
       // SHOW used in handout
       @Test
-      public void T1_xx_create_operator_saved() throws Exception {
+      public void T1_10_create_operator_saved() throws Exception {
           runCommands(
               CREATE_OPERATOR,
               "'West Auckland Camel Treks'",
@@ -201,7 +201,7 @@ public class MainTest {
 
       // operator in Tauranga 'Shark Snorkel Bay'
       @Test
-      public void T1_xx_create_operator_saved_english_tereo_match()
+      public void T1_11_create_operator_saved_english_tereo_match()
           throws Exception {
           runCommands(
               CREATE_OPERATOR,
@@ -222,7 +222,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_saved_two() throws Exception {
+      public void T1_12_create_operator_saved_two() throws Exception {
           runCommands(
               CREATE_OPERATOR,
               "'West Auckland Camel Treks'",
@@ -248,7 +248,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_same_name_same_location()
+      public void T1_13_create_operator_same_name_same_location()
           throws Exception {
           runCommands(
               CREATE_OPERATOR,
@@ -280,7 +280,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_same_location() throws Exception {
+      public void T1_14_create_operator_same_location() throws Exception {
           runCommands(
               CREATE_OPERATOR,
               "'Parliament Bungee Jump'",
@@ -310,7 +310,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_same_name_different_location()
+      public void T1_15_create_operator_same_name_different_location()
           throws Exception {
           runCommands(
               CREATE_OPERATOR,
@@ -345,7 +345,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_same_name_different_full_location()
+      public void T1_16_create_operator_same_name_different_full_location()
           throws Exception {
           runCommands(
               CREATE_OPERATOR,
@@ -379,7 +379,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_three_locations() throws Exception {
+      public void T1_17_create_operator_three_locations() throws Exception {
           runCommands(
               CREATE_OPERATOR,
               "'Volcano Bungee Jump'",
@@ -422,7 +422,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_operator_same_location_three()
+      public void T1_18_create_operator_same_location_three()
           throws Exception {
           runCommands(
               CREATE_OPERATOR,
@@ -475,7 +475,7 @@ public class MainTest {
       // Shark Snorkel Bay
 
       @Test
-      public void T1_xx_create_operators_mixed_and_same_locations()
+      public void T1_19_create_operators_mixed_and_same_locations()
           throws Exception {
           runCommands(
               CREATE_OPERATOR,
@@ -539,7 +539,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_create_14_operators() throws Exception {
+      public void T1_20_create_14_operators() throws Exception {
           runCommands(unpack(CREATE_14_OPERATORS, EXIT));
 
           assertContains(
@@ -605,7 +605,7 @@ public class MainTest {
 
       // HIDE
       @Test
-      public void T1_xx_create_14_operators_saved() throws Exception {
+      public void T1_21_create_14_operators_saved() throws Exception {
           runCommands(
               unpack(CREATE_14_OPERATORS, SEARCH_OPERATORS, "*", EXIT)
           );
@@ -672,7 +672,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_search_operators_specific_location_te_reo()
+      public void T1_22_search_operators_specific_location_te_reo()
           throws Exception {
           runCommands(
               unpack(
@@ -695,7 +695,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_search_operators_specific_location_english()
+      public void T1_23_search_operators_specific_location_english()
           throws Exception {
           runCommands(
               unpack(
@@ -717,7 +717,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_search_operators_specific_location_abbreviation()
+      public void T1_24_search_operators_specific_location_abbreviation()
           throws Exception {
           runCommands(
               unpack(CREATE_14_OPERATORS, SEARCH_OPERATORS, "akl", EXIT)
@@ -734,7 +734,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_search_operators_keyword_in_location()
+      public void T1_25_search_operators_keyword_in_location()
           throws Exception {
           runCommands(
               unpack(CREATE_14_OPERATORS, SEARCH_OPERATORS, "ranga", EXIT)
@@ -753,7 +753,7 @@ public class MainTest {
 
       // HIDE
       @Test
-      public void T1_xx_search_operators_keyword_across_multiple_locations()
+      public void T1_26_search_operators_keyword_across_multiple_locations()
           throws Exception {
           runCommands(
               unpack(CREATE_14_OPERATORS, SEARCH_OPERATORS, "tau", EXIT)
@@ -784,7 +784,7 @@ public class MainTest {
 
       // HIDE
       @Test
-      public void T1_xx_search_operators_keyword_no_match() throws Exception {
+      public void T1_27_search_operators_keyword_no_match() throws Exception {
           runCommands(
               unpack(CREATE_14_OPERATORS, SEARCH_OPERATORS, "xyz", EXIT)
           );
@@ -795,7 +795,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_search_operators_keyword_in_name() throws Exception {
+      public void T1_28_search_operators_keyword_in_name() throws Exception {
           runCommands(
               unpack(CREATE_14_OPERATORS, SEARCH_OPERATORS, "Avon", EXIT)
           );
@@ -810,7 +810,7 @@ public class MainTest {
 
       // HIDE
       @Test
-      public void T1_xx_search_operators_keyword_in_name_multiple()
+      public void T1_29_search_operators_keyword_in_name_multiple()
           throws Exception {
           runCommands(
               unpack(CREATE_14_OPERATORS, SEARCH_OPERATORS, "bungee", EXIT)
@@ -828,7 +828,7 @@ public class MainTest {
       }
 
       @Test
-      public void T1_xx_search_operators_keyword_in_name_no_match()
+      public void T1_30_search_operators_keyword_in_name_no_match()
           throws Exception {
           runCommands(
               unpack(CREATE_14_OPERATORS, SEARCH_OPERATORS, "climbing", EXIT)
