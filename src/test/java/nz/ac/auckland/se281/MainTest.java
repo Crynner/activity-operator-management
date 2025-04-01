@@ -1720,6 +1720,108 @@ public class MainTest {
       assertDoesNotContain("Review not added:", true);
       assertDoesNotContain("Activity not found: ", true);
     }
+
+    @Test
+    public void T3_C05_display_reviews_whitespace() throws Exception {
+      // testing DISPLAY_REVIEWS id input handles surrounding whitespace
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "n", "5", "T'was quite good!"),
+          DISPLAY_REVIEWS, "'      WACT-AKL-001-001          '",
+          EXIT));
+
+      assertContains("There is 1 review for activity");
+      
+      assertDoesNotContain(" reviews for activity", true);
+      assertDoesNotContain("Activity not found: ", true);
+    }
+
+    @Test
+    public void T3_C06_public_review_anonymous() throws Exception {
+      // testing ADD_PUBLIC_REVIEW correctly implements anonymity
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "y", "5", "T'was quite good!"),
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("There is 1 review for activity");
+      assertContains("by 'Anonymous'");
+      
+      assertDoesNotContain(" reviews for activity", true);
+      assertDoesNotContain("Activity not found: ", true);
+      assertDoesNotContain("by 'QR Code'", true);
+    }
+
+    @Test
+    public void T3_C07_public_review_whitespace() throws Exception {
+      // testing ADD_PUBLIC_REVIEW correctly handles surrounding whitespace
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PUBLIC_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "y", "5", "T'was quite good!"),
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("There is 1 review for activity");
+      assertContains("by 'Anonymous'");
+      
+      assertDoesNotContain(" reviews for activity", true);
+      assertDoesNotContain("Activity not found: ", true);
+      assertDoesNotContain("by 'QR Code'", true);
+    }
+
+    @Test
+    public void T3_C07_private_review_followup() throws Exception {
+      // testing ADD_PRIVATE_REVIEW correctly displays when followup is required.
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PRIVATE_REVIEW, "'WACT-AKL-001-001'", options("QR Code", "qr.code2025@something.com", "5", "Illegitimatism?", "y"),
+          DISPLAY_REVIEWS, "'WACT-AKL-001-001'",
+          EXIT));
+
+      assertContains("There is 1 review for activity");
+      assertContains("by 'QR Code'");
+      assertContains("Need to email");
+      
+      assertDoesNotContain(" reviews for activity", true);
+      assertDoesNotContain("Activity not found: ", true);
+      assertDoesNotContain("Resolved:", true);
+    }
+
+    @Test
+    public void T3_C08_private_review_invalid_activity() throws Exception {
+      // testing ADD_PRIVATE_REVIEW handles invalid activity ids
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PRIVATE_REVIEW, "'NONE-AKL-999-001'", options("QR Code", "qr.code2025@something.com", "5", "Illegitimatism?", "y"),
+          EXIT));
+
+      assertContains("Review not added: ");
+      assertContains("is an invalid activity ID.");
+      
+      assertDoesNotContain("added successfully for activity", true);
+    }
+
+    @Test
+    public void T3_C09_private_review_whitespace() throws Exception {
+      // testing ADD_PRIVATE_REVIEW handles surrounding whitespace
+      runCommands(unpack(
+          CREATE_14_OPERATORS,
+          CREATE_27_ACTIVITIES,
+          ADD_PRIVATE_REVIEW, "'      WACT-AKL-001-001      '", options("QR Code", "qr.code2025@something.com", "5", "Illegitimatism?", "y"),
+          EXIT));
+
+      assertContains("Private review ");
+      assertContains("added successfully for activity");
+
+      assertDoesNotContain("Review not added: ", true);
+      assertDoesNotContain("is an invalid activity ID.", true);
+    }
   }
 
   @FixMethodOrder(MethodSorters.NAME_ASCENDING)
