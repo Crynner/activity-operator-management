@@ -4,7 +4,7 @@ import java.util.Map;
 import nz.ac.auckland.se281.Types.ReviewType;
 
 abstract class Review {
-  private String reviewName;
+  protected String reviewName;
   private int reviewRating;
   private String reviewText;
   private String reviewId;
@@ -50,12 +50,8 @@ abstract class Review {
   }
 
   public void printReview() {
-    printReview(reviewName);
-  }
-
-  public void printReview(String name) {
     MessageCli.REVIEW_ENTRY_HEADER.printMessage(String.valueOf(reviewRating),
-        "5", reviewType.getName(), reviewId, name);
+        "5", reviewType.getName(), reviewId, reviewName);
     MessageCli.REVIEW_ENTRY_REVIEW_TEXT.printMessage(reviewText);
   }
 }

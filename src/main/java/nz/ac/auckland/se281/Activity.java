@@ -62,6 +62,7 @@ public class Activity {
         reviewRatings.add(reviewList.getLast().getRating());
         break;
       case PRIVATE:
+        // skip private review for activity ratings
         reviewList.add(new PrivateReview(details, reviewId));
         break;
       case EXPERT:
@@ -88,8 +89,7 @@ public class Activity {
       default: // pluralised review
         MessageCli.REVIEWS_FOUND.printMessage("are",
             String.valueOf(reviewList.size()),
-            "s",
-            this.activityName);
+            "s", this.activityName);
     }
     for (Review review : reviewList) {
       review.printReview();

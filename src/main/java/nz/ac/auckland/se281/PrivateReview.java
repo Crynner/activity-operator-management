@@ -10,6 +10,7 @@ public class PrivateReview extends Review {
 
   PrivateReview(Map<String, String> reviewDetails, String id) {
     super(reviewDetails, id, ReviewType.PRIVATE);
+    // review constructor including emial and followup details
     reviewFollowup = (reviewDetails.get("followup").equals("y"));
     reviewEmail = reviewDetails.get("email");
   }
@@ -23,7 +24,7 @@ public class PrivateReview extends Review {
   @Override
   public void printReview() {
     super.printReview();
-    // depending on whether review has been resolved or not
+    // depending on whether review has been resolved or not, change followup message
     if (reviewFollowup) {
       MessageCli.REVIEW_ENTRY_FOLLOW_UP.printMessage(reviewEmail);
     } else {
