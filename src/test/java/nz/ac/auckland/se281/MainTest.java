@@ -19,7 +19,9 @@ import static nz.ac.auckland.se281.Main.Command.*;
   MainTest.YourTests.class,
   MainTest.CustomTask2.class,
   MainTest.CustomTask3.class,
-  MainTest.OthersTests.class
+  MainTest.OthersTestsTask1.class,
+  MainTest.OthersTestsTask2.class,
+  MainTest.OthersTestsTask3.class
 })
 public class MainTest {
 
@@ -3294,9 +3296,9 @@ public class MainTest {
   }
 
   @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-  public static class OthersTests extends CliTest {
+  public static class OthersTestsTask1 extends CliTest {
 
-    public OthersTests() {
+    public OthersTestsTask1() {
       super(Main.class);
     }
 
@@ -3499,6 +3501,652 @@ public class MainTest {
       assertDoesNotContain("There are 14", true);
     }
   }
+
+  @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    public static class OthersTestsTask2 extends CliTest {
+
+      public OthersTestsTask2() {
+        super(Main.class);
+      }
+
+      // tests if the activity duplicate checks disregard spaces
+      @Test
+      public void T2_01_create_activity_invalid_activity_name() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'     Hi     '",
+            "Adventure",
+            "'WACT-AKL-001'",
+            EXIT);
+        assertContains("Activity not created");
+        assertDoesNotContain("Successfully created activity", true);
+      }
+
+      // tests whether the activity name creation ignores spaces
+      @Test
+      public void T2_02_create_activity_extra_spaces_in_name() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'     Sunset Camel Trek     '",
+            "Adventure",
+            "'WACT-AKL-001'",
+            EXIT);
+        assertContains("Successfully created activity 'Sunset Camel Trek'");
+        assertDoesNotContain("Successfully created activity '     Sunset Camel Trek     '", true);
+      }
+
+      // Tests if the other type is correctly utilised
+      @Test
+      public void T2_03_create_activity_unknown_activity_type() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Sunset Camel Trek'",
+            "ajsdoifjaoisdfjaosidfj",
+            "'WACT-AKL-001'",
+            EXIT);
+        assertContains("Successfully created activity");
+        assertContains("'Other'");
+        assertDoesNotContain("Activity not created", true);
+      }
+
+      // Tests if the activity type is case insensitive
+      @Test
+      public void T2_04_create_activity_random_case_activity_type() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Sunset Camel Trek'",
+            "aDVeNTuRe",
+            "'WACT-AKL-001'",
+            EXIT);
+        assertContains("Successfully created activity");
+        assertContains("'Adventure'");
+        assertDoesNotContain("Activity not created", true);
+      }
+
+      // Tests if the operator ID searching only searches IDs, and not the full operator details
+      @Test
+      public void T2_05_view_activity_weird_operator_name() throws Exception {
+        runCommands(
+            CREATE_OPERATOR, "'WACT-AKL-001'", "'AKL'", VIEW_ACTIVITIES, "'WACT-AKL-001'", EXIT);
+        assertContains("Operator not found: 'WACT-AKL-001' is an invalid operator ID.");
+        assertDoesNotContain("Successfully created activity", true);
+        assertDoesNotContain("There are no matching activities found.");
+      }
+
+      // Tests if the activity searching includes searching for the english name of the location
+      @Test
+      public void T2_06_search_activities_found_keyword_location_english() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS, CREATE_27_ACTIVITIES, SEARCH_ACTIVITIES, "WELLINGton", EXIT));
+        // assertContains("There are 2 matching activities found:");
+        assertContains(
+            "* Jumping Through Political Loopholes: [PBJ-WLG-001-001/Culture] offered by Parliament"
+                + " Bungee Jump");
+        assertContains(
+            "* Politics with a View: [PBJ-WLG-001-002/Scenic] offered by Parliament Bungee Jump");
+        assertDoesNotContain("There are no matching activities found.", true);
+      }
+
+      // Tests if the activity searching includes searching for the abbreviation of the location
+      @Test
+      public void T2_07_search_activities_found_keyword_location_abbreviation() throws Exception {
+        runCommands(
+            unpack(CREATE_14_OPERATORS, CREATE_27_ACTIVITIES, SEARCH_ACTIVITIES, "WlG", EXIT));
+        // assertContains("There are 2 matching activities found:");
+        assertContains(
+            "* Jumping Through Political Loopholes: [PBJ-WLG-001-001/Culture] offered by Parliament"
+                + " Bungee Jump");
+        assertContains(
+            "* Politics with a View: [PBJ-WLG-001-002/Scenic] offered by Parliament Bungee Jump");
+        assertDoesNotContain("There are no matching activities found.", true);
+      }
+
+      // check if the activity searching includes searching for mixed capitalisation of special
+      // characters
+      @Test
+      public void T2_08_search_activities_found_keyword_special_character() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                SEARCH_ACTIVITIES,
+                "'Ā'",
+                // "Auckland",
+                EXIT));
+        assertContains("There are 4 matching activities found:");
+        assertContains("Bethells Beach Camel Trek");
+        assertContains("Sky Tower Base Jumping");
+        assertContains("Flaming Feast");
+        assertContains("Lava Lookout Walk");
+      }
+
+      // Checks if the activity searching matches the operator name
+      @Test
+      public void T2_09_search_activities_operator_name() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                SEARCH_ACTIVITIES,
+                "'West Auckland Camel Treks'",
+                // "Auckland",
+                EXIT));
+        assertContains("There are no matching activities found.");
+        assertDoesNotContain("found:");
+      }
+
+      // test whether the activity name is case sensitive when searching activities
+      @Test
+      public void T2_10_search_activities_activity_name_case_sensitive() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                SEARCH_ACTIVITIES,
+                "'bethells beach camel trek'",
+                // "Auckland",
+                EXIT));
+        assertContains("There is 1 matching activity found:");
+        assertContains("Bethells Beach Camel Trek");
+        assertDoesNotContain("There are no matching activities found.", true);
+      }
+
+      // test whether the activity type is case sensitive when searching activities
+      @Test
+      public void T2_11_search_activities_activity_type_case_sensitive() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                SEARCH_ACTIVITIES,
+                "'adventURE'",
+                // "Auckland",
+                EXIT));
+
+        assertContains("There are 5 matching activities found:");
+        assertContains(
+            "  * Bethells Beach Camel Trek: [WACT-AKL-001-001/Adventure] offered by West Auckland"
+                + " Camel Treks");
+        assertContains(
+            "  * Sky Tower Base Jumping: [WACT-AKL-001-002/Adventure] offered by West Auckland"
+                + " Camel Treks");
+        assertContains(
+            "  * The Frodo Jump: [HST-HLZ-002-001/Adventure] offered by Hobbiton Skydiving Tours");
+        assertContains(
+            "  * River Rush: [ARWR-CHC-002-003/Adventure] offered by Avon River Whitewater"
+                + " Rafting");
+        assertContains(
+            "  * Snowy Slide: [DPP-DUD-001-003/Adventure] offered by Dunedin Penguin Parade");
+        assertDoesNotContain("There are no matching activities found.", true);
+      }
+
+      // test whether searching activities with partial matching works
+      @Test
+      public void T2_12_search_activities_partial_matching() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                SEARCH_ACTIVITIES,
+                "'eaCH CAmel'",
+                SEARCH_ACTIVITIES,
+                "'aDVen'",
+                SEARCH_ACTIVITIES,
+                "dunED",
+                EXIT));
+        assertContains("There is 1 matching activity found:");
+        assertContains(
+            "  * Bethells Beach Camel Trek: [WACT-AKL-001-001/Adventure] offered by West Auckland"
+                + " Camel Treks");
+        assertContains("There are 5 matching activities found:");
+        assertContains(
+            "  * Bethells Beach Camel Trek: [WACT-AKL-001-001/Adventure] offered by West Auckland"
+                + " Camel Treks");
+        assertContains(
+            "  * Sky Tower Base Jumping: [WACT-AKL-001-002/Adventure] offered by West Auckland"
+                + " Camel Treks");
+        assertContains(
+            "  * The Frodo Jump: [HST-HLZ-002-001/Adventure] offered by Hobbiton Skydiving Tours");
+        assertContains(
+            "  * River Rush: [ARWR-CHC-002-003/Adventure] offered by Avon River Whitewater"
+                + " Rafting");
+        assertContains(
+            "  * Snowy Slide: [DPP-DUD-001-003/Adventure] offered by Dunedin Penguin Parade");
+        assertContains("There are 3 matching activities found:");
+        assertContains("* Penguin Pies: [DPP-DUD-001-001/Food] offered by Dunedin Penguin Parade");
+        assertContains(
+            "  * Waddling Wonders: [DPP-DUD-001-002/Wildlife] offered by Dunedin Penguin Parade");
+        assertContains(
+            "  * Snowy Slide: [DPP-DUD-001-003/Adventure] offered by Dunedin Penguin Parade");
+        assertDoesNotContain("There are no matching activities found.", true);
+      }
+
+      // Test whether the keyword is trimmed when searching for activities
+      @Test
+      public void T2_13_search_activities_surrounding_spaces() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                SEARCH_ACTIVITIES,
+                "'     Auckland     '",
+                // "Auckland",
+                EXIT));
+        assertContains("There are 4 matching activities found:");
+        assertContains("Bethells Beach Camel Trek");
+        assertContains("Sky Tower Base Jumping");
+        assertContains("Flaming Feast");
+        assertContains("Lava Lookout Walk");
+        assertDoesNotContain("There are no matching activities found.", true);
+      }
+    }
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    public static class OthersTestsTask3 extends CliTest {
+
+      public OthersTestsTask3() {
+        super(Main.class);
+      }
+
+      // this test ensures that when the activity ID is searched for, it only searches for IDs, and
+      // doesn't return any activity that matches the keyword in a different field
+      @Test
+      public void T3_01_proper_activity_searching() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            CREATE_ACTIVITY,
+            "'WACT-AKL-001-001'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            ADD_PUBLIC_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "n", "3", "Could be better"),
+            DISPLAY_REVIEWS,
+            "WACT-AKL-001-001",
+            EXIT);
+        assertContains("There is 1 review for activity 'Bethells Beach Camel Trek'.");
+        assertDoesNotContain("There are no reviews for activity 'WACT-AKL-001-001'.");
+      }
+
+      // this test ensures that the rating limits (only from 1-5) are enforced, and that the rating
+      // is saved
+      @Test
+      public void T3_02_proper_rating_limits() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            ADD_PUBLIC_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "n", "0", "I absolutely hated it! They scammed us!!1"),
+            ADD_PRIVATE_REVIEW,
+            "WACT-AKL-001-001",
+            options("Bob", "bob@email.com", "10", "I loved it! 10/10", "n"),
+            ADD_EXPERT_REVIEW,
+            "WACT-AKL-001-001",
+            options(
+                "Clara",
+                "6",
+                "I enjoyed it, but the wait times were quite long, and the customer service wasn't"
+                    + " the best, so my rating drops from a 8/10 to a 6/10",
+                "n"),
+            DISPLAY_REVIEWS,
+            "WACT-AKL-001-001",
+            EXIT);
+        assertContains("[1/5] Public review (WACT-AKL-001-001-R1) by 'Alice'");
+        assertContains("[5/5] Private review (WACT-AKL-001-001-R2) by 'Bob'");
+        assertContains("[5/5] Expert review (WACT-AKL-001-001-R3) by 'Clara'");
+        assertDoesNotContain("[0/5]");
+        assertDoesNotContain("[10/5]");
+        assertDoesNotContain("[55/5]");
+      }
+
+      // test that public reviews are anonymised only when needed
+      @Test
+      public void T3_03_add_public_review_anonymised() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            ADD_PUBLIC_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "y", "3", "Could be better"),
+            ADD_PUBLIC_REVIEW,
+            "WACT-AKL-001-001",
+            options("Bob", "n", "4", "Good"),
+            DISPLAY_REVIEWS,
+            "WACT-AKL-001-001",
+            EXIT);
+        assertContains("[3/5] Public review (WACT-AKL-001-001-R1) by 'Anonymous'");
+        assertContains("[4/5] Public review (WACT-AKL-001-001-R2) by 'Bob'");
+        assertDoesNotContain("[3/5] Public review (WACT-AKL-001-001-R1) by 'Alice'");
+        assertDoesNotContain("[4/5] Public review (WACT-AKL-001-001-R2) by 'Anonymous'");
+      }
+
+      // test that a public review does not start as endorsed
+      @Test
+      public void T3_XX_public_review_not_endorsed() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            ADD_PUBLIC_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "n", "3", "Could be better"),
+            DISPLAY_REVIEWS,
+            "WACT-AKL-001-001",
+            EXIT);
+        assertContains("[3/5] Public review (WACT-AKL-001-001-R1) by 'Alice'");
+        assertDoesNotContain("Endorsed by admin.");
+      }
+
+      // test that the review being endorsed is a public review
+      @Test
+      public void T3_XX_endorse_review_not_public() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "WACT-AKL-001",
+            ADD_PRIVATE_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "alice@mail.com", "3", "Could be better", "y"),
+            ENDORSE_REVIEW,
+            "WACT-AKL-001-001-R1",
+            EXIT);
+        assertContains("Review not endorsed: 'WACT-AKL-001-001-R1' is not a public review.");
+        assertDoesNotContain("Review 'WACT-AKL-001-001-R1' endorsed successfully.");
+      }
+
+      // test that the correct error is printed when trying to endorse a non-existent review
+      @Test
+      public void T3_XX_endorse_review_not_found() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            ADD_PUBLIC_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "n", "3", "Could be better"),
+            ENDORSE_REVIEW,
+            "WACT-AKL-001-001-R2",
+            EXIT);
+        assertContains("Review not found: 'WACT-AKL-001-001-R2' is an invalid review ID.");
+        assertDoesNotContain("Review 'WACT-AKL-001-001-R2' endorsed successfully.");
+      }
+
+      // test that private reviews that require a follow-up print the required message
+      @Test
+      public void T3_04_add_private_review_followup() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            ADD_PRIVATE_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "alice@mail.com", "3", "Could be better", "y"),
+            DISPLAY_REVIEWS,
+            "WACT-AKL-001-001",
+            EXIT);
+        assertContains("[3/5] Private review (WACT-AKL-001-001-R1) by 'Alice'");
+        assertContains("Need to email 'alice@mail.com' for follow-up.");
+        // see #390 to see why the below cannot be in the output
+        // https://edstem.org/au/courses/19942/discussion/2587468
+        assertDoesNotContain("Need to email 'felicia@email.com' for follow-up.");
+        assertDoesNotContain("Resolved: \"-\"");
+      }
+
+      // test that the review being resolved on is a private review
+      @Test
+      public void T3_XX_resolve_review_not_private() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            ADD_PUBLIC_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "n", "3", "Could be better"),
+            RESOLVE_REVIEW,
+            "WACT-AKL-001-001-R1",
+            "'So sorry to hear that!'",
+            EXIT);
+        assertContains("Review not resolved: 'WACT-AKL-001-001-R1' is not a private review.");
+        assertDoesNotContain("Review 'WACT-AKL-001-001-R1' resolved successfully.");
+      }
+
+      // test that when an expert review does not recommend the activity, it doesn't state otherwise
+      @Test
+      public void T3_XX_expert_review_not_recommend() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            ADD_EXPERT_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "3", "Could be better", "n"),
+            DISPLAY_REVIEWS,
+            "WACT-AKL-001-001",
+            EXIT);
+        assertContains("[3/5] Expert review (WACT-AKL-001-001-R1) by 'Alice'");
+        assertDoesNotContain("Recommended by experts.");
+      }
+
+      // test whether the review the image is being uploaded to is an expert review
+      @Test
+      public void T3_XX_upload_review_image_not_expert() throws Exception {
+        runCommands(
+            CREATE_OPERATOR,
+            "'West Auckland Camel Treks'",
+            "'AKL'",
+            CREATE_ACTIVITY,
+            "'Bethells Beach Camel Trek'",
+            "Adventure",
+            "'WACT-AKL-001'",
+            ADD_PUBLIC_REVIEW,
+            "WACT-AKL-001-001",
+            options("Alice", "n", "3", "Could be better"),
+            UPLOAD_REVIEW_IMAGE,
+            "WACT-AKL-001-001-R1",
+            "'image.png'",
+            EXIT);
+        assertContains("Image not uploaded: 'WACT-AKL-001-001-R1' is not an expert review.");
+        assertDoesNotContain(
+            "Image 'image.png' uploaded successfully for review 'WACT-AKL-001-001-R1'.");
+      }
+
+      // test if private and expert reviews check if the activity ID is valid
+      @Test
+      public void T3_XX_add_review_activity_id_invalid() throws Exception {
+        runCommands(
+            ADD_PRIVATE_REVIEW,
+            "WACT-AKL-001-001",
+            options("Felicia", "felicia@email.com", "5", "Great", "n"),
+            ADD_EXPERT_REVIEW,
+            "WACT-AKL-001-001",
+            options("Eve", "4", "Good", "y"),
+            EXIT);
+        assertContains("Review not added: 'WACT-AKL-001-001' is an invalid activity ID.");
+        assertDoesNotContain("Successfully created private review", true);
+        assertDoesNotContain("Successfully created expert review", true);
+      }
+
+      // test if the activity ID is valid when displaying reviews
+      @Test
+      public void T3_XX_display_reviews_activity_id_invalid() throws Exception {
+        runCommands(DISPLAY_REVIEWS, "WACT-AKL-001-001", EXIT);
+        assertContains("Activity not found: 'WACT-AKL-001-001' is an invalid activity ID.");
+        assertDoesNotContain("There are no reviews for activity 'WACT-AKL-001-001'.", true);
+      }
+
+      // test if the resolution to private reviews is set and displayed correctly
+      @Test
+      public void T3_XX_resolve_review_check_details() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                ADD_PRIVATE_REVIEW,
+                "WACT-AKL-001-001",
+                options("Felicia", "felicia@email.com", "5", "Great", "y"),
+                RESOLVE_REVIEW,
+                "WACT-AKL-001-001-R1",
+                "'So sorry to hear that!'",
+                DISPLAY_REVIEWS,
+                "WACT-AKL-001-001",
+                EXIT));
+        assertContains("[5/5] Private review (WACT-AKL-001-001-R1) by 'Felicia'");
+        assertContains("Resolved: \"So sorry to hear that!\"");
+        assertDoesNotContain("Resolved: \"-\"", true);
+      }
+
+      // test if private reviews being resolved don't print the error messages for not being private
+      // and not having an invalid activity ID (basically just a hardcode detector)
+      @Test
+      public void T3_XX_resolve_review_unneeded_messages() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                ADD_PRIVATE_REVIEW,
+                "WACT-AKL-001-001",
+                options("Felicia", "felicia@email.com", "5", "Great", "y"),
+                RESOLVE_REVIEW,
+                "WACT-AKL-001-001-R1",
+                "'So sorry to hear that!'",
+                DISPLAY_REVIEWS,
+                "WACT-AKL-001-001",
+                EXIT));
+        assertContains("[5/5] Private review (WACT-AKL-001-001-R1) by 'Felicia'");
+        assertContains("Resolved: \"So sorry to hear that!\"");
+        assertDoesNotContain("Review not found: 'WACT-AKL-001-001-R1' is an invalid review ID.");
+        assertDoesNotContain("Review not resolved: 'WACT-AKL-001-001-R1' is not a private review.");
+      }
+
+      // test that when public reviews are endorsed, it does not print the error message for not
+      // being a public review, or having an invalid review ID
+      @Test
+      public void T3_XX_endorse_public_review() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                ADD_PUBLIC_REVIEW,
+                "WACT-AKL-001-001",
+                options("Alice", "n", "3", "Could be better"),
+                ENDORSE_REVIEW,
+                "WACT-AKL-001-001-R1",
+                EXIT));
+        assertContains("Review 'WACT-AKL-001-001-R1' endorsed successfully.");
+        assertDoesNotContain("Review not endorsed: 'WACT-AKL-001-001-R1' is not a public review.");
+        assertDoesNotContain("Review not found: 'WACT-AKL-001-001-R1' is an invalid review ID.");
+      }
+
+      // test that when images are uploaded to private reviews, it does not print the error message
+      // for not being an expert review, or the review not being found
+      @Test
+      public void T3_XX_upload_review_image_correct_messages() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                ADD_EXPERT_REVIEW,
+                "WACT-AKL-001-001",
+                options("Eve", "4", "Good", "y"),
+                UPLOAD_REVIEW_IMAGE,
+                "WACT-AKL-001-001-R1",
+                "'image.png'",
+                EXIT));
+        assertContains("Image 'image.png' uploaded successfully for review 'WACT-AKL-001-001-R1'.");
+        assertDoesNotContain("Image not uploaded: 'WACT-AKL-001-001-R1' is not an expert review.");
+        assertDoesNotContain("Review not found: 'WACT-AKL-001-001-R1' is an invalid review ID.");
+      }
+
+      // test that when there are no reviewed activities in any location, that all
+      // locations print the same message (disregarding the location itself)
+      @Test
+      public void T3_XX_display_top_activities_no_reviews() throws Exception {
+        runCommands(
+            unpack(CREATE_14_OPERATORS, CREATE_27_ACTIVITIES, DISPLAY_TOP_ACTIVITIES, EXIT));
+
+        assertContains("No reviewed activities found in Auckland | Tāmaki Makaurau.");
+        assertContains("No reviewed activities found in Hamilton | Kirikiriroa.");
+        assertContains("No reviewed activities found in Tauranga.");
+        assertContains("No reviewed activities found in Taupo | Taupō-nui-a-Tia.");
+        assertContains("No reviewed activities found in Wellington | Te Whanganui-a-Tara.");
+        assertContains("No reviewed activities found in Nelson | Whakatu.");
+        assertContains("No reviewed activities found in Christchurch | Ōtautahi.");
+        assertContains("No reviewed activities found in Dunedin | Ōtepoti.");
+        assertDoesNotContain("Top reviewed activity in", true);
+      }
+
+      // test if private reviews are discounted from the reviews
+      @Test
+      public void T3_XX_display_top_activities_private_reviews() throws Exception {
+        runCommands(
+            unpack(
+                CREATE_14_OPERATORS,
+                CREATE_27_ACTIVITIES,
+                ADD_PRIVATE_REVIEW,
+                "WACT-AKL-001-001",
+                options("Felicia", "felicia@email.com", "5", "Great", "n"),
+                DISPLAY_TOP_ACTIVITIES,
+                EXIT));
+        assertContains("No reviewed activities found in Auckland | Tāmaki Makaurau.");
+        assertDoesNotContain("Top reviewed activity in Auckland | Tāmaki Makaurau:");
+      }
+    }
+
+    
   
 
   private static final Object[] CREATE_14_OPERATORS =
