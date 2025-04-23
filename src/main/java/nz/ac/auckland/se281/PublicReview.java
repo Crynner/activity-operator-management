@@ -9,7 +9,7 @@ public class PublicReview extends Review {
   PublicReview(Map<String, String> reviewDetails, String id) {
     super(reviewDetails, id, ReviewType.PUBLIC);
     // change name to anonymous if indicated in review form
-    if (reviewDetails.get("anonymous").equals("y")) {
+    if (reviewDetails.get("anonymous").equalsIgnoreCase("y")) {
       reviewName = "Anonymous";
     }
   }
